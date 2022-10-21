@@ -1,4 +1,4 @@
 # codecare
 UI/UX Expert - Penny Wang
 Frontend - Nishit and Param
-Backend - Alan and Tioncheng
+Backend - Alan and Tiancheng
