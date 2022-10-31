@@ -1,6 +1,15 @@
 from application import db, login_manager
 from flask_login import UserMixin
 from datetime import datetime
+from sqlalchemy.ext.automap import automap_base
+
+Base = automap_base()
+Base.prepare(db.engine,reflect = True)
+Account = Base.classes.account
+Patient = Base.classes.patient
+Provider = Base.classes.provider
+
+
 
 # get the user by id
 @login_manager.user_loader
