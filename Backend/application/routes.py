@@ -35,10 +35,10 @@ def token_required(f):
 #     }
 # ]
 
-# @app.route("/")
-# @app.route("/home")
-# def home():
-#     return render_template('home.html', posts=posts)
+@app.route("/")
+@app.route("/home")
+def home():
+    return "good"
 
 
 # @app.route("/about")
@@ -62,6 +62,7 @@ def restrict():
     for key in account.__dict__:
         if key != '_sa_instance_state':
             return_dict[key] = account.__dict__[key]
+    return_dict['token'] = token
     return jsonify(return_dict)
     
 
