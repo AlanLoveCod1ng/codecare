@@ -3,21 +3,21 @@ from flask_login import UserMixin
 from datetime import datetime
 from sqlalchemy.ext.automap import automap_base
 
-Base = automap_base()
-Base.prepare(db.engine,reflect = True)
-Account = Base.classes.account
-Patient = Base.classes.patient
-Provider = Base.classes.provider
+# Base = automap_base()
+# Base.prepare(db.engine,reflect = True)
+# Account = Base.classes.account
+# Patient = Base.classes.patient
+# Provider = Base.classes.provider
 
 
 
 # get the user by id
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(user_id))
 
 
-class User(db.Model, UserMixin):
+class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
