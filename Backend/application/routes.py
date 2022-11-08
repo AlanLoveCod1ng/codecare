@@ -1,7 +1,7 @@
 import datetime
 from flask import render_template, url_for, flash, redirect, request, jsonify, make_response
 from application import app, db, bcrypt
-from application.models import Account, Post
+from application.models import Account
 from functools import wraps
 import jwt
 
