@@ -1,23 +1,21 @@
 import logo from './logo.svg';
+import CodecareIcon from './Codecare.png';
 import './App.css';
 
 function App() {
   return (
+    
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="App-box1">
+        <img src={CodecareIcon} width="200" height="80"/>
+        <h2> Box1</h2>
+      </div>
+      <div className="App-box2">
+        <h2> Box2</h2>
+      </div>
+      <div className="App-box3">
+        <h2> Box3</h2>
+      </div>
     </div>
   );
 }
