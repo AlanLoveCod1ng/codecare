@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  
 }
 
 .App-logo {
@@ -23,6 +23,33 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.App-box1{
+  margin:auto;
+  vertical-align: top;
+  display: inline-block;
+  width: 19vw;
+  height : 100vh;
+  
+}
+.App-box2{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align:top;
+  display: inline-block;
+  width: 60vw;
+  height : 100vh;
+  
+}
+.App-box3{
+  margin:auto;
+  vertical-align:top;
+  display: inline-block;
+  width: 19vw;
+  height : 100vh;
+  
+}
+
 
 .App-link {
   color: #61dafb;
