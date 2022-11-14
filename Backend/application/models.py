@@ -1,5 +1,4 @@
 from application import Base
-from datetime import datetime
 
 
 
