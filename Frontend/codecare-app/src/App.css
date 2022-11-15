@@ -1,15 +1,27 @@
 .App {
   
-}
 
+}
+.Notifications {
+  display: flex;
+  flex-direction: column;
+}
+.lowerContainer {
+  flex: 1;
+  display: flex;
+  height: 80%;
+
+
+}
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  flex: 1;
+  width: 100vw;
+  height: 20%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    padding: 12x 24x;
   }
 }
 
@@ -23,6 +35,32 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.leftInnerContainer {
+  margin: auto;
+  height: 100%;
+}
+
+.navButs {
+  display: block;
+}
+
+.navButs button {
+  color:grey;
+  background-color: white;
+  font-size: 24px;
+  padding: 8px 64px;
+  border: 0em;
+  display: block;
+  text-align: center;
+}
+
+.navButs button:hover {
+  color: red;
+  background-color: lightgrey;
+  transition: 0.75s;
+}
+
 .App-box1{
   margin:auto;
   vertical-align: top;
@@ -35,6 +73,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
   vertical-align:top;
   display: inline-block;
   width: 60vw;
@@ -43,6 +82,7 @@
 }
 .App-box3{
   margin:auto;
+  text-align: center;
   vertical-align:top;
   display: inline-block;
   width: 19vw;
