@@ -1,0 +1,44 @@
+.Notification{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    vertical-align:top;
+    display: inline-block;
+    width: 60vw;
+    height : 100vh;
+    
+}
+.Box1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    vertical-align:top;
+    display: inline-block;
+    width: 60vw;
+    height : 25vh;
+    
+}
+.Box2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    vertical-align:top;
+    display: inline-block;
+    width: 60vw;
+    height : 25vh;
+    
+}
+.Box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    vertical-align:top;
+    display: inline-block;
+    width: 60vw;
+    height : 49vh;
+    
+}
