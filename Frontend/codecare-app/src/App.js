@@ -1,3 +1,6 @@
+
+
+import logo from './logo.svg';
 import CodecareIcon from './Codecare.png';
 import './App.css';
 import MapIcon from './map.JPG';
@@ -27,6 +30,7 @@ function App() {
     <div className="App">
       <div className="App-box1">
         <img src={CodecareIcon} width="200" height="80"/>
+
         <div className = "lowerContainer">
         <div className= "leftInnerContainer">
           <div className = "navButs">
@@ -120,6 +124,7 @@ function App() {
           </ul>
         </div>
       }
+
     </div>
   );
 }
