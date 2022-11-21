@@ -2,7 +2,7 @@ import datetime
 import uuid
 from flask import redirect, request, jsonify, make_response
 from application import app, session, db_engine, Base
-from application.models import Account, Patient, Provider, Patient, Provider, Record
+from application.models import Account, Patient, Provider, Patient, Provider, Record, Notification, Notification_Provider, State, Infe_city, Env_city
 from functools import wraps
 from sqlalchemy import func
 import jwt
@@ -90,8 +90,38 @@ def register():
 @app.route("/notification",methods=['GET'])
 @token_required
 def read_notification(account):
+    return_list = []
     if account.is_patient == 1:
         return jsonify({'message' : 'Provider Only.'})
+    elif account.is_patient != 1:
+        provider_id = account.id
+        notifications = session.query(
+            Notification, Notification_Provider
+        ).filter(
+            Notification.n_id == Notification_Provider.n_id
+        ).filter(
+            Notification_Provider.provider_id == provider_id
+        )
+        for n, np in notifications:
+            noti_dict = {}
+            city_id = n.city_id
+            city = session.query(Infe_city).filter(Infe_city.city_id == city_id)
+            if city.count() == 0:
+                city = session.query(Env_city).filter(Env_city.city_id == city_id)
+            city = city.first()
+            city_name = city.city_name
+            state_name = session.query(State).filter(State.state_id == city.state_id).first().state_name
+            content = n.content
+            dt = n.datetime
+            todo = np.condition
+            noti_dict["account_id"] = account.account_id
+            noti_dict["city"] = city_name
+            noti_dict["state"] = state_name
+            noti_dict["content"] = content
+            noti_dict['datetime'] = dt
+            noti_dict['waiting to be processed'] = todo
+            return_list.append(noti_dict)
+    return jsonify(return_list)
     
 # return the location record of certain patient
 @app.route("/record", methods = ['GET'])
