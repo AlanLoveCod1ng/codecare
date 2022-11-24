@@ -16,19 +16,21 @@ def token_required(f):
         token = request.args.get('token')
         
         if not token:
-            return jsonify({'message' : 'Token is missing!'})
+            return make_response('Token is missing!')
         
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'],"HS256")
         except:
-            return jsonify({'message' : 'Token is invalid'}), 403
+            return make_response('Token is invalid', 403)
         account = session.query(Account).filter(Account.account_id == data['account_id']).first()
         return f(account, *args, **kwargs)
     return decorated
 
-@app.route("/")
+@app.route("/<name>/<address>")
 @app.route("/home")
-def home():
+def home(name, address):
+    print(name)
+    print(address)
     return "good"
 
 
@@ -46,8 +48,12 @@ def account(account):
 @app.route("/login", methods=['POST'])
 def login():
     form = request.form
-    email = form['email']
-    password = form['password']
+    try:
+        email = form['email']
+        password = form['password']
+    except:
+        return make_response('Error with form!', 401)
+        
     account = session.query(Account).filter(Account.email == email).first()
 
     if account and password == account.password:
@@ -59,14 +65,14 @@ def login():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     data = request.form
-    first_name = data['first_name']
-    last_name = data['last_name']
-    email = data['email']
-    phone = data['phone']
-    password = data['password']
-    confirm_password = data.get('confirm_password')
-
-
+    try:
+        first_name = data['first_name']
+        last_name = data['last_name']
+        email = data['email']
+        phone = data['phone']
+        password = data['password']
+    except:
+        return make_response("Error with form.", 401)
 
     user = session.query(Account).filter(Account.email == email).first()
 
@@ -91,6 +97,8 @@ def register():
 @token_required
 def read_notification(account):
     return_list = []
+    filter = request.args.get("filter", "")
+    first_number = request.args.get("first", None)
     if account.is_patient == 1:
         return jsonify({'message' : 'Provider Only.'})
     elif account.is_patient != 1:
@@ -102,6 +110,12 @@ def read_notification(account):
         ).filter(
             Notification_Provider.provider_id == provider_id
         )
+        if filter == "waiting":
+            notifications = notifications.filter(Notification_Provider.condition == 1)
+        elif filter == "processed":
+            notifications = notifications.filter(Notification_Provider.condition == 0)
+        if first_number and first_number.isnumeric():
+            notifications = notifications[:int(first_number)]
         for n, np in notifications:
             noti_dict = {}
             city_id = n.city_id
@@ -128,10 +142,16 @@ def read_notification(account):
 @token_required
 def location_record(account):
     if account.is_patient != 1:
-        return jsonify({'message' : 'Patient Only.'})
+        return make_response("Patient Only.", 403)
+    first_number = request.args.get("first", None)
     patient_id = account.id
     return_dict = {}
-    records = session.query(Record).filter(Record.patient_id == patient_id)
+    try:
+        records = session.query(Record).filter(Record.patient_id == patient_id)
+    except:
+        return make_response("Can't fetch data.", 401)
+    if first_number and first_number.isnumeric():
+        records = records[:int(first_number)]
     for record in records:
         record_dict = {}
         for key in record.__dict__:
