@@ -93,23 +93,25 @@ Here is the returned json for above API call:
     "city": "San Jose",
     "content": "cursus non, egestas a, dui. Cras pellentesque. Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec feugiat metus sit amet ante. Vivamus non lorem vitae odio sagittis semper. Nam tempor diam dictum sapien. Aenean massa. Integer vitae nibh. Donec est mauris, rhoncus id, mollis nec, cursus a, enim. Suspendisse aliquet, sem ut cursus luctus, ipsum leo elementum sem, vitae aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida. Praesent eu nulla at sem molestie sodales. Mauris blandit enim consequat purus. Maecenas libero est, congue a, aliquet vel, vulputate eu, odio. Phasellus at augue id ante dictum cursus. Nunc mauris elit, dictum eu, eleifend nec, malesuada ut, sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus vitae mauris sit amet lorem semper auctor. Mauris vel turpis. Aliquam adipiscing lobortis risus. In mi pede, nonummy ut, molestie in, tempus eu, ligula. Aenean euismod mauris eu elit. Nulla facilisi. Sed neque. Sed eget lacus. Mauris non dui nec urna suscipit nonummy. Fusce fermentum fermentum arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae Phasellus ornare. Fusce mollis. Duis sit amet diam eu dolor egestas rhoncus. Proin nisl sem, consequat nec, mollis vitae, posuere at, velit. Cras lorem lorem, luctus ut, pellentesque eget, dictum placerat, augue. Sed molestie. Sed id risus",
     "datetime": "10/28/2018, 00:07:15",
+    "notificaiont_id": 1,
     "state": "California",
-    "waiting to be processed": 1
+    "processed": 0
   },
   {
     "account_id": 11,
     "city": "Sacramento",
     "content": "in lobortis tellus justo sit amet nulla. Donec non justo. Proin non massa non ante bibendum ullamcorper. Duis cursus, diam at pretium aliquet, metus urna convallis erat, eget tincidunt dui augue eu tellus. Phasellus elit pede, malesuada vel, venenatis vel, faucibus id, libero. Donec consectetuer mauris id sapien. Cras dolor dolor, tempus non, lacinia at, iaculis quis, pede. Praesent eu dui. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean eget magna. Suspendisse tristique neque venenatis lacus. Etiam bibendum fermentum metus. Aenean sed pede nec ante blandit viverra. Donec tempus, lorem fringilla ornare placerat, orci lacus vestibulum lorem, sit amet ultricies sem magna nec quam. Curabitur vel lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec dignissim magna a tortor. Nunc commodo auctor velit. Aliquam nisl. Nulla eu",
     "datetime": "07/01/2021, 00:43:38",
+    "notificaiont_id": 2,
     "state": "California",
-    "waiting to be processed": 1
+    "processed": 0
   }
 ]
 ```
 
 This one will return first 10 notifications which are waiting to be processed.
 
-TODO: I plan to return notification sorted by datetime automatically, that is, the most recent notification will be on the top.
+UPDATE: Now returned notifications will be ordered by datetime, descending order (most recent on the top).
 
 TODO: This one only supports provider version, patient one is still under development.
 
@@ -120,10 +122,34 @@ This API is for patient only which will return patient's locations record in jso
 
 ```first``` same as [/notification](#notification).
 
-TODO: I plan to return record sorted by datetime automatically, that is, the most recent notification will be on the top.
+UPDATE: Now returned record will also be ordered by datetime, descending order (most recent on the top).
 
 ### Message
 <ul>
     <li>If given token is for provider, message "Patient Only." and code 403 will be returned</li>
     <li>If something wrong with query, message "Can't fetch data" and code 401 will be returned.</li>
 </ul>
+
+## /send/<notification_id>
+Token required
+
+This API is for provider only. When call this API, a notification will be sent from provider to all his patient.
+
+For example,
+
+    http://127.0.0.1:5000/send/458?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxMSwiZXhwIjoxNjY5NTk4ODMyfQ.B1ls3cpK1FpdMVoSDcpg_1IYSdOHns1lBs4iwtrixnw
+
+will send notification with ```id=458``` from provider represented by this token to all patients belong to this provider.
+
+The id of notification ```notification_id``` is passed to frontend in the response of [/notification](#notification).
+
+After this, the notification will be marked as processed for this provider.
+
+### Message
+<ul>
+    <li>If given token is for Patient, message "Provider Only." and code 403 will be returned</li>
+    <li>If this notificaion is already been sent before, message "Notification alreay sent" and code 202 will be returned</li>
+    <li>If something wrong with inserting record to database, message "Error with inserting record" and code 401 will be returned.</li>
+    <li>If send notification successfully, message "Notification sent to %d patient" and code 201 will be returned, %d is the number of patients receiving this notification.</li>
+</ul>
+

@@ -2,12 +2,12 @@ import datetime
 import uuid
 from flask import redirect, request, jsonify, make_response
 from application import app, session, db_engine, Base
-from application.models import Account, Patient, Provider, Patient, Provider, Record, Notification, Notification_Provider, State, Infe_city, Env_city
+from application.models import Account, Patient, Provider, Patient, Provider, Record, Notification, Notification_Provider, Notification_Patient, State, Infe_city, Env_city
 from functools import wraps
 from sqlalchemy import func
 import jwt
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, desc
 
 
 def token_required(f):
@@ -100,20 +100,18 @@ def read_notification(account):
     filter = request.args.get("filter", "")
     first_number = request.args.get("first", None)
     if account.is_patient == 1:
-        return jsonify({'message' : 'Provider Only.'})
-    elif account.is_patient != 1:
         provider_id = account.id
         notifications = session.query(
-            Notification, Notification_Provider
+            Notification, Notification_Patient
         ).filter(
             Notification.n_id == Notification_Provider.n_id
         ).filter(
             Notification_Provider.provider_id == provider_id
-        )
+        ).order_by(desc(Notification.datetime))
         if filter == "waiting":
-            notifications = notifications.filter(Notification_Provider.condition == 1)
+            notifications = notifications.filter(Notification_Provider.processed == 0)
         elif filter == "processed":
-            notifications = notifications.filter(Notification_Provider.condition == 0)
+            notifications = notifications.filter(Notification_Provider.processed == 1)
         if first_number and first_number.isnumeric():
             notifications = notifications[:int(first_number)]
         for n, np in notifications:
@@ -127,13 +125,48 @@ def read_notification(account):
             state_name = session.query(State).filter(State.state_id == city.state_id).first().state_name
             content = n.content
             dt = n.datetime
-            todo = np.condition
+            todo = np.processed
             noti_dict["account_id"] = account.account_id
             noti_dict["city"] = city_name
             noti_dict["state"] = state_name
             noti_dict["content"] = content
             noti_dict['datetime'] = dt
             noti_dict['waiting to be processed'] = todo
+            return_list.append(noti_dict)
+    elif account.is_patient != 1:
+        provider_id = account.id
+        notifications = session.query(
+            Notification, Notification_Provider
+        ).filter(
+            Notification.n_id == Notification_Provider.n_id
+        ).filter(
+            Notification_Provider.provider_id == provider_id
+        ).order_by(desc(Notification.datetime))
+        if filter == "waiting":
+            notifications = notifications.filter(Notification_Provider.processed == 0)
+        elif filter == "processed":
+            notifications = notifications.filter(Notification_Provider.processed == 1)
+        if first_number and first_number.isnumeric():
+            notifications = notifications[:int(first_number)]
+        for n, np in notifications:
+            noti_dict = {}
+            city_id = n.city_id
+            city = session.query(Infe_city).filter(Infe_city.city_id == city_id)
+            if city.count() == 0:
+                city = session.query(Env_city).filter(Env_city.city_id == city_id)
+            city = city.first()
+            city_name = city.city_name
+            state_name = session.query(State).filter(State.state_id == city.state_id).first().state_name
+            content = n.content
+            dt = n.datetime
+            todo = np.processed
+            noti_dict['notification_id'] = n.n_id
+            noti_dict["account_id"] = account.account_id
+            noti_dict["city"] = city_name
+            noti_dict["state"] = state_name
+            noti_dict["content"] = content
+            noti_dict['datetime'] = dt
+            noti_dict['processed'] = todo
             return_list.append(noti_dict)
     return jsonify(return_list)
     
@@ -145,9 +178,9 @@ def location_record(account):
         return make_response("Patient Only.", 403)
     first_number = request.args.get("first", None)
     patient_id = account.id
-    return_dict = {}
+    return_list = []
     try:
-        records = session.query(Record).filter(Record.patient_id == patient_id)
+        records = session.query(Record).filter(Record.patient_id == patient_id).order_by(desc(Record.datetime))
     except:
         return make_response("Can't fetch data.", 401)
     if first_number and first_number.isnumeric():
@@ -157,6 +190,33 @@ def location_record(account):
         for key in record.__dict__:
             if key != '_sa_instance_state':
                 record_dict[key] = record.__dict__[key]
-        return_dict[record.location_id] = record_dict
+        return_list.append(record_dict)
     
-    return jsonify(return_dict)
+    return jsonify(return_list)
+
+# return the location record of certain patient
+@app.route("/send/<notification_id>", methods = ['GET','POST'])
+@token_required
+def send_notification(account,notification_id):
+    if account.is_patient != 0:
+        return make_response("Provider Only.", 403)
+    provider_id = account.id
+    sent_notification = session.query(Notification_Provider).filter(Notification_Provider.n_id == notification_id).filter(Notification_Provider.provider_id == provider_id)
+    if len(sent_notification.all()) == 0:
+        return make_response("Invalid ID.", 403)
+    notification = sent_notification.first()
+    to_add = []
+    if notification.processed == 1:
+        return make_response("Notification Already sent.", 201)
+    target_patients = session.query(Patient).filter(Patient.provider_id == provider_id)
+    for patient in target_patients:
+        np = Notification_Patient(n_id = notification_id, patient_id = patient.patient_id, read = 0)
+        to_add.append(np)
+    for n in sent_notification:
+        n.processed = 1
+    try:
+        session.add_all(to_add)
+        session.commit()
+    except:
+        return make_response("Error with inserting record.", 401)
+    return make_response("Notification sent to %d patient"%(len(target_patients.all())), 201)
