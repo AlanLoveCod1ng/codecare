@@ -37,8 +37,9 @@ def account(account):
     return jsonify(return_dict)
     
 
-@app.route("/login", methods=['GET','POST'])
+@app.route("/login", methods=['GET'])
 def login():
+    print('called')
     try:
         email = request.args['email']
         password = request.args['password']
@@ -53,7 +54,7 @@ def login():
     else:
         return make_response('Could not verify!', 401)
 
-@app.route("/register", methods=['GET', 'POST'])
+@app.route("/register", methods=['GET'])
 def register():
     data = request.args
     try:
@@ -224,7 +225,7 @@ def send_notification(account,notification_id):
         return make_response("Error with inserting record.", 401)
     return make_response("Notification sent to %d patient"%(len(target_patients.all())), 201)
 
-@app.route("/new_record", methods = ['GET','POST'])
+@app.route("new_record", methods = ['GET','POST'])
 @token_required
 def add_record(account):
     if account.is_patient != 1:
