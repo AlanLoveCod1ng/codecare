@@ -24,14 +24,25 @@ Base = automap_base()
 Base.prepare(autoload_with=db_engine)
 sqlalchemy.orm.configure_mappers()
 session= Session(db_engine)
-NP = Base.classes.notification_provider
-NP = session.query(NP)
+record = Base.classes.location_record
+state = Base.classes.state
+rs = session.query(record)
 d1 = datetime.strptime('1/1/2015 1:30 AM', '%m/%d/%Y %I:%M %p')
 d2 = datetime.now()
 to_add = []
 count = 0
-for np in NP:
-    np.processed = 0
+for r in rs:
+    print(count)
+    lat = r.latitude
+    lon = r.longitude
+    response = requests.get("https://api.3geonames.org/%f,%f.json"%(lat,lon)).text
+    data = json.loads(response)
+    state_name = data['nearest']['prov']
+    print(data)
+    print(state_name)
+    state_id = session.query(state).filter(state.state_name == state_name).first().state_id
+    r.state_id = state_id
+    count += 1
 try:
     session.commit()
 finally:

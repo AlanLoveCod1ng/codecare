@@ -1,11 +1,9 @@
-import datetime
-import uuid
 from flask import redirect, request, jsonify, make_response
 from application import app, session, db_engine, Base
-from application.models import Account, Patient, Provider, Patient, Provider, Record, Notification, Notification_Provider, Notification_Patient, State, Infe_city, Env_city
+from application.models import Account, Patient, Provider, Patient, Provider, Record, Notification, Notification_Provider, Notification_Patient, State, City
 from functools import wraps
 from sqlalchemy import func
-import jwt
+import requests, json, jwt,datetime
 
 from sqlalchemy import Column, Integer, String, desc
 
@@ -26,13 +24,6 @@ def token_required(f):
         return f(account, *args, **kwargs)
     return decorated
 
-@app.route("/<name>/<address>")
-@app.route("/home")
-def home(name, address):
-    print(name)
-    print(address)
-    return "good"
-
 
 @app.route('/account')
 @token_required
@@ -47,10 +38,9 @@ def account(account):
 
 @app.route("/login", methods=['POST'])
 def login():
-    form = request.form
     try:
-        email = form['email']
-        password = form['password']
+        email = request.args['email']
+        password = request.args['password']
     except:
         return make_response('Error with form!', 401)
         
@@ -117,9 +107,7 @@ def read_notification(account):
         for n, np in notifications:
             noti_dict = {}
             city_id = n.city_id
-            city = session.query(Infe_city).filter(Infe_city.city_id == city_id)
-            if city.count() == 0:
-                city = session.query(Env_city).filter(Env_city.city_id == city_id)
+            city = session.query(City).filter(City.city_id == city_id)
             city = city.first()
             city_name = city.city_name
             state_name = session.query(State).filter(State.state_id == city.state_id).first().state_name
@@ -131,7 +119,7 @@ def read_notification(account):
             noti_dict["state"] = state_name
             noti_dict["content"] = content
             noti_dict['datetime'] = dt
-            noti_dict['waiting to be processed'] = todo
+            noti_dict['processed'] = todo
             return_list.append(noti_dict)
     elif account.is_patient != 1:
         provider_id = account.id
@@ -151,9 +139,7 @@ def read_notification(account):
         for n, np in notifications:
             noti_dict = {}
             city_id = n.city_id
-            city = session.query(Infe_city).filter(Infe_city.city_id == city_id)
-            if city.count() == 0:
-                city = session.query(Env_city).filter(Env_city.city_id == city_id)
+            city = session.query(City).filter(City.city_id == city_id)
             city = city.first()
             city_name = city.city_name
             state_name = session.query(State).filter(State.state_id == city.state_id).first().state_name
@@ -170,19 +156,35 @@ def read_notification(account):
             return_list.append(noti_dict)
     return jsonify(return_list)
     
-# return the location record of certain patient
-@app.route("/record", methods = ['GET'])
+    
+@app.route("/patients", methods = ['GET'])
 @token_required
-def location_record(account):
-    if account.is_patient != 1:
-        return make_response("Patient Only.", 403)
+def get_patients(account):
+    if account.is_patient == 1:
+        return make_response("Provider Only" ,401)
+    provider_id = account.id
+    patients = session.query(Patient, Account).filter(Patient.patient_id == Account.id).filter(Patient.provider_id == provider_id)
+    return_list = []
+    for patient, account in patients:
+        patient_dict = {}
+        patient_dict['patient_id'] = account.id
+        patient_dict['email'] = account.email
+        patient_dict['phone'] = account.phone
+        patient_dict['first_name'] = account.first_name
+        patient_dict['last_name'] = account.last_name
+        return_list.append(patient_dict)
+    return jsonify(return_list)
+
+# return the location record of certain patient
+@app.route("/record/<patient_id>", methods = ['GET'])
+@token_required
+def location_record(account,patient_id):
     first_number = request.args.get("first", None)
-    patient_id = account.id
     return_list = []
     try:
         records = session.query(Record).filter(Record.patient_id == patient_id).order_by(desc(Record.datetime))
     except:
-        return make_response("Can't fetch data.", 401)
+        return make_response("Invalid Patient ID.", 401)
     if first_number and first_number.isnumeric():
         records = records[:int(first_number)]
     for record in records:
@@ -220,3 +222,34 @@ def send_notification(account,notification_id):
     except:
         return make_response("Error with inserting record.", 401)
     return make_response("Notification sent to %d patient"%(len(target_patients.all())), 201)
+
+@app.route("new_record", methods = ['GET','POST'])
+@token_required
+def add_record(account):
+    if account.is_patient != 1:
+        return make_response("Patient Only.", 403)
+    try:
+        lat = float(request.args.get('lat'))
+        lon = float(request.args.get('lon'))
+        dt = request.args.get('datetime')
+    except:
+        return make_response("Missing Args", 403)
+    try:
+        datetime.strptime('1/1/2015 1:30 AM', '%Y-%m-%d %H:%M:%S')
+    except:
+        return make_response("Invalid datetime format.", 401)
+    patient_id = account.id
+    response = requests.get("https://api.3geonames.org/%f,%f.json"%(lat,lon)).text
+    data = json.loads(response)
+    city_name = data['nearest']['city']
+    state_name = data['nearest']['prov']
+    try:
+        state_id = session.query(State).filter(State.state_name == state_name).first().state_id
+    except:
+        return make_response("Not in US.", 401)
+    new_record = Record(patient_id = patient_id, latitude = lat, longitude = lon, city = city_name, state_id = state_id)
+    try:
+        session.add(new_record)
+    except:
+        return make_response("Error inserting data.", 403)
+    return make_response("Successfully add record", 202)

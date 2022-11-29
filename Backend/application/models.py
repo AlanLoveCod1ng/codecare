@@ -11,6 +11,5 @@ State = Base.classes.state
 Notification = Base.classes.notification
 Notification_Provider = Base.classes.notification_provider
 Notification_Patient = Base.classes.notification_patient
-Infe_city = Base.classes.infectious_city
-Env_city = Base.classes.environment_city
+City = Base.classes.city
     

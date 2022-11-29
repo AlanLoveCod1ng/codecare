@@ -71,6 +71,12 @@ returned json example
 No error message will be returned from /account, only possible error is in [Token Required](#token-required).
 
 
+## /patient
+Token required
+
+This API is for provider only, it will return information about all patients belong to current provider.
+
+
 ## /notification
 Token required.
 
@@ -115,10 +121,14 @@ UPDATE: Now returned notifications will be ordered by datetime, descending order
 
 TODO: This one only supports provider version, patient one is still under development.
 
-## /record
+## /record/<patient_id>
 Token required
 
-This API is for patient only which will return patient's locations record in json file. /record has one extra allowed argument.
+Note that in order to allow both patient and provider could access patient's location records, the patient identification will not be passed through token, rather than route.
+
+There are two sources of patient_id, if current login user is patient, patient_id already returned when login, if current login user is provider, then he can get patient_id via calling [/patients](#patient).
+
+This API is for both patient and provider which will return patient's locations record in json file. /record has one extra allowed argument.
 
 ```first``` same as [/notification](#notification).
 
@@ -126,8 +136,7 @@ UPDATE: Now returned record will also be ordered by datetime, descending order (
 
 ### Message
 <ul>
-    <li>If given token is for provider, message "Patient Only." and code 403 will be returned</li>
-    <li>If something wrong with query, message "Can't fetch data" and code 401 will be returned.</li>
+    <li>If Patient id doesn't exist, message "Invalid Patient ID" and code 401 will be returned.</li>
 </ul>
 
 ## /send/<notification_id>
