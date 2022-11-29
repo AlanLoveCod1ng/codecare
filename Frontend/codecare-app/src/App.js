@@ -12,10 +12,15 @@ import SettingsIcon from './settings.JPG';
 import React, {useState, useEffect} from 'react';
 import Notification from './Notification';
 
-
-
+async function  getResponse(){
+  const response = await fetch(
+    '/login?email=ultrices.a@google.ca&password=1962'
+  );
+  console.log(await response.json());
+  
+}
 function App() {
-
+  getResponse()
   const[Box3,setBox3] = useState(false);
   const[Box2, setBox2] = useState(true);
   let[data, setData] = useState(null);

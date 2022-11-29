@@ -36,8 +36,9 @@ def account(account):
     return jsonify(return_dict)
     
 
-@app.route("/login", methods=['POST'])
+@app.route("/login", methods=['GET'])
 def login():
+    print('called')
     try:
         email = request.args['email']
         password = request.args['password']
@@ -50,11 +51,11 @@ def login():
         token = jwt.encode({'account_id': account.account_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'],algorithm='HS256')
         return redirect('/account?token='+token)
     else:
-        return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
+        return make_response('Could not verify!', 401)
 
-@app.route("/register", methods=['GET', 'POST'])
+@app.route("/register", methods=['GET'])
 def register():
-    data = request.form
+    data = request.args
     try:
         first_name = data['first_name']
         last_name = data['last_name']
@@ -223,7 +224,7 @@ def send_notification(account,notification_id):
         return make_response("Error with inserting record.", 401)
     return make_response("Notification sent to %d patient"%(len(target_patients.all())), 201)
 
-@app.route("new_record", methods = ['GET','POST'])
+@app.route("/new_record", methods = ['GET','POST'])
 @token_required
 def add_record(account):
     if account.is_patient != 1:
