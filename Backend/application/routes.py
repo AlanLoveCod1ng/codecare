@@ -211,7 +211,7 @@ def send_notification(account,notification_id):
     notification = sent_notification.first()
     to_add = []
     if notification.processed == 1:
-        return make_response("Notification Already sent.", 201)
+        return make_response("Notification Already processed.", 201)
     target_patients = session.query(Patient).filter(Patient.provider_id == provider_id)
     for patient in target_patients:
         np = Notification_Patient(n_id = notification_id, patient_id = patient.patient_id, read = 0)
@@ -224,6 +224,28 @@ def send_notification(account,notification_id):
     except:
         return make_response("Error with inserting record.", 401)
     return make_response("Notification sent to %d patient"%(len(target_patients.all())), 201)
+
+# return the location record of certain patient
+@app.route("/deny/<notification_id>", methods = ['GET','POST'])
+@token_required
+def deny_notification(account,notification_id):
+    if account.is_patient != 0:
+        return make_response("Provider Only.", 403)
+    provider_id = account.id
+    sent_notification = session.query(Notification_Provider).filter(Notification_Provider.n_id == notification_id).filter(Notification_Provider.provider_id == provider_id)
+    if len(sent_notification.all()) == 0:
+        return make_response("Invalid ID.", 403)
+    notification = sent_notification.first()
+    if notification.processed == 1:
+        return make_response("Notification Already processed.", 201)
+    for n in sent_notification:
+        n.processed = 1
+    try:
+        session.commit()
+    except:
+        return make_response("Error with inserting record.", 401)
+    return make_response("Notification denied.", 201)
+
 
 @app.route("new_record", methods = ['GET','POST'])
 @token_required

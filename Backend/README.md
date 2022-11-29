@@ -157,9 +157,33 @@ After this, the notification will be marked as processed for this provider.
 ### Message
 <ul>
     <li>If given token is for Patient, message "Provider Only." and code 403 will be returned</li>
-    <li>If this notificaion is already been sent before, message "Notification alreay sent" and code 202 will be returned</li>
+    <li>If this notificaion is already been processed before, message "Notification alreay processed" and code 202 will be returned</li>
     <li>If something wrong with inserting record to database, message "Error with inserting record" and code 401 will be returned.</li>
     <li>If send notification successfully, message "Notification sent to %d patient" and code 201 will be returned, %d is the number of patients receiving this notification.</li>
+</ul>
+
+
+## /deny/<notification_id>
+Token required
+
+This API is for provider only. When call this API, a notification will be denied and marked as processed.
+
+For example,
+
+    http://127.0.0.1:5000/deny/458?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxMSwiZXhwIjoxNjY5NTk4ODMyfQ.B1ls3cpK1FpdMVoSDcpg_1IYSdOHns1lBs4iwtrixnw
+
+will deny notification with ```id=458``` without sending to patients
+
+The id of notification ```notification_id``` is passed to frontend in the response of [/notification](#notification).
+
+After this, the notification will be marked as processed for this provider.
+
+### Message
+<ul>
+    <li>If given token is for Patient, message "Provider Only." and code 403 will be returned</li>
+    <li>If this notificaion is already been processed before, message "Notification alreay processed" and code 202 will be returned</li>
+    <li>If something wrong with applying changes to database, message "Error with changing data" and code 401 will be returned.</li>
+    <li>If send notification successfully, message "Notification denied" and code 201 will be returned.</li>
 </ul>
 
 ## /new_record
