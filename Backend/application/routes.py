@@ -3,7 +3,8 @@ from application import app, session, db_engine, Base
 from application.models import Account, Patient, Provider, Patient, Provider, Record, Notification, Notification_Provider, Notification_Patient, State, City
 from functools import wraps
 from sqlalchemy import func
-import requests, json, jwt,datetime
+from datetime import datetime
+import requests, json, jwt
 
 from sqlalchemy import Column, Integer, String, desc
 
@@ -36,13 +37,13 @@ def account(account):
     return jsonify(return_dict)
     
 
-@app.route("/login", methods=['POST'])
+@app.route("/login", methods=['GET','POST'])
 def login():
     try:
         email = request.args['email']
         password = request.args['password']
     except:
-        return make_response('Error with form!', 401)
+        return make_response('Error with args!', 401)
         
     account = session.query(Account).filter(Account.email == email).first()
 
@@ -50,11 +51,11 @@ def login():
         token = jwt.encode({'account_id': account.account_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'],algorithm='HS256')
         return redirect('/account?token='+token)
     else:
-        return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
+        return make_response('Could not verify!', 401)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    data = request.form
+    data = request.args
     try:
         first_name = data['first_name']
         last_name = data['last_name']
@@ -223,7 +224,7 @@ def send_notification(account,notification_id):
         return make_response("Error with inserting record.", 401)
     return make_response("Notification sent to %d patient"%(len(target_patients.all())), 201)
 
-@app.route("new_record", methods = ['GET','POST'])
+@app.route("/new_record", methods = ['GET','POST'])
 @token_required
 def add_record(account):
     if account.is_patient != 1:
@@ -235,7 +236,7 @@ def add_record(account):
     except:
         return make_response("Missing Args", 403)
     try:
-        datetime.strptime('1/1/2015 1:30 AM', '%Y-%m-%d %H:%M:%S')
+        datetime.strptime(dt, '%Y-%m-%d %H:%M:%S')
     except:
         return make_response("Invalid datetime format.", 401)
     patient_id = account.id
@@ -247,9 +248,10 @@ def add_record(account):
         state_id = session.query(State).filter(State.state_name == state_name).first().state_id
     except:
         return make_response("Not in US.", 401)
-    new_record = Record(patient_id = patient_id, latitude = lat, longitude = lon, city = city_name, state_id = state_id)
+    new_record = Record(patient_id = patient_id, latitude = lat, longitude = lon, city = city_name, state_id = state_id, datetime = dt)
     try:
         session.add(new_record)
+        session.commit()
     except:
         return make_response("Error inserting data.", 403)
     return make_response("Successfully add record", 202)
