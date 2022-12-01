@@ -3,7 +3,8 @@ from application import app, session, db_engine, Base
 from application.models import Account, Patient, Provider, Patient, Provider, Record, Notification, Notification_Provider, Notification_Patient, State, City
 from functools import wraps
 from sqlalchemy import func
-import requests, json, jwt,datetime
+from datetime import datetime
+import requests, json, jwt
 
 from sqlalchemy import Column, Integer, String, desc
 
@@ -43,7 +44,7 @@ def login():
         email = request.args['email']
         password = request.args['password']
     except:
-        return make_response('Error with form!', 401)
+        return make_response('Error with args!', 401)
         
     account = session.query(Account).filter(Account.email == email).first()
 
@@ -210,7 +211,7 @@ def send_notification(account,notification_id):
     notification = sent_notification.first()
     to_add = []
     if notification.processed == 1:
-        return make_response("Notification Already sent.", 201)
+        return make_response("Notification Already processed.", 201)
     target_patients = session.query(Patient).filter(Patient.provider_id == provider_id)
     for patient in target_patients:
         np = Notification_Patient(n_id = notification_id, patient_id = patient.patient_id, read = 0)
@@ -224,7 +225,29 @@ def send_notification(account,notification_id):
         return make_response("Error with inserting record.", 401)
     return make_response("Notification sent to %d patient"%(len(target_patients.all())), 201)
 
-@app.route("/new_record", methods = ['GET','POST'])
+# return the location record of certain patient
+@app.route("/deny/<notification_id>", methods = ['GET','POST'])
+@token_required
+def deny_notification(account,notification_id):
+    if account.is_patient != 0:
+        return make_response("Provider Only.", 403)
+    provider_id = account.id
+    sent_notification = session.query(Notification_Provider).filter(Notification_Provider.n_id == notification_id).filter(Notification_Provider.provider_id == provider_id)
+    if len(sent_notification.all()) == 0:
+        return make_response("Invalid ID.", 403)
+    notification = sent_notification.first()
+    if notification.processed == 1:
+        return make_response("Notification Already processed.", 201)
+    for n in sent_notification:
+        n.processed = 1
+    try:
+        session.commit()
+    except:
+        return make_response("Error with inserting record.", 401)
+    return make_response("Notification denied.", 201)
+
+
+@app.route("new_record", methods = ['GET','POST'])
 @token_required
 def add_record(account):
     if account.is_patient != 1:
@@ -236,7 +259,7 @@ def add_record(account):
     except:
         return make_response("Missing Args", 403)
     try:
-        datetime.strptime('1/1/2015 1:30 AM', '%Y-%m-%d %H:%M:%S')
+        datetime.strptime(dt, '%Y-%m-%d %H:%M:%S')
     except:
         return make_response("Invalid datetime format.", 401)
     patient_id = account.id
@@ -248,9 +271,10 @@ def add_record(account):
         state_id = session.query(State).filter(State.state_name == state_name).first().state_id
     except:
         return make_response("Not in US.", 401)
-    new_record = Record(patient_id = patient_id, latitude = lat, longitude = lon, city = city_name, state_id = state_id)
+    new_record = Record(patient_id = patient_id, latitude = lat, longitude = lon, city = city_name, state_id = state_id, datetime = dt)
     try:
         session.add(new_record)
+        session.commit()
     except:
         return make_response("Error inserting data.", 403)
     return make_response("Successfully add record", 202)
