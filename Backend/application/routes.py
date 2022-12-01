@@ -3,7 +3,7 @@ from application import app, session, db_engine, Base
 from application.models import Account, Patient, Provider, Patient, Provider, Record, Notification, Notification_Provider, Notification_Patient, State, City
 from functools import wraps
 from sqlalchemy import func
-from datetime import datetime
+import datetime
 import requests, json, jwt
 
 from sqlalchemy import Column, Integer, String, desc
@@ -247,7 +247,7 @@ def deny_notification(account,notification_id):
     return make_response("Notification denied.", 201)
 
 
-@app.route("new_record", methods = ['GET','POST'])
+@app.route("/new_record", methods = ['GET','POST'])
 @token_required
 def add_record(account):
     if account.is_patient != 1:
@@ -259,7 +259,7 @@ def add_record(account):
     except:
         return make_response("Missing Args", 403)
     try:
-        datetime.strptime(dt, '%Y-%m-%d %H:%M:%S')
+        datetime.datetime.strptime(dt, '%Y-%m-%d %H:%M:%S')
     except:
         return make_response("Invalid datetime format.", 401)
     patient_id = account.id
