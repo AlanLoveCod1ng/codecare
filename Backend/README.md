@@ -26,7 +26,7 @@ login will verify the email and password, generate token and redirect to ```/acc
 </ul>
 
 ## /register
-Similar to [/account](#account), get/post method and ```id="first_name"```, ```id="second_name"```, ```id="email"```, ```id="password"```, ```id="phone"``` in the form are required.<br>
+Similar to [/account](#account), get method and ```"first_name"```, ```"second_name"```, ```"email"```, ```"password"```, ```"phone"```,  ```"state"``` in the url are required, state should be full name of state, no lowercase uppercase requirement.<br>
 We only allow patient creating account so /register will only create patient account.
 ### Message
 <ul>
@@ -71,11 +71,15 @@ returned json example
 No error message will be returned from /account, only possible error is in [Token Required](#token-required).
 
 
-## /patient
+## /patients
 Token required
 
 This API is for provider only, it will return information about all patients belong to current provider.
 
+## /provider
+Token required
+
+This API is for patient only, it will return information about his/her provider's information so that patient could contact their provider.
 
 ## /notification
 Token required.
@@ -174,7 +178,6 @@ For example,
 
 will deny notification with ```id=458``` without sending to patients
 
-The id of notification ```notification_id``` is passed to frontend in the response of [/notification](#notification).
 
 After this, the notification will be marked as processed for this provider.
 
@@ -184,6 +187,28 @@ After this, the notification will be marked as processed for this provider.
     <li>If this notificaion is already been processed before, message "Notification alreay processed" and code 202 will be returned</li>
     <li>If something wrong with applying changes to database, message "Error with changing data" and code 401 will be returned.</li>
     <li>If send notification successfully, message "Notification denied" and code 201 will be returned.</li>
+</ul>
+
+## /read/<notification_id>
+Token required
+
+This API is for patient only. When call this API, a notification will be marked as read.
+
+For example,
+
+    http://127.0.0.1:5000/read/458?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoxLCJleHAiOjE2NzAwMDY4MDh9.5WHQNw5Q1zGnqARrv459emsZRhvjvH0YGEC1rVWMmGQ
+
+will mark notification with ```id=458``` for this patient
+
+
+After this, the notification will be marked as processed for this provider.
+
+### Message
+<ul>
+    <li>If given token is for Provider, message "Patient Only." and code 403 will be returned</li>
+    <li>If this notificaion is already been read before, message "Notification alreay read" and code 202 will be returned</li>
+    <liß>If something wrong with applying changes to database, message "Error with changing data" and code 401 will be returned.</liß>
+    <li>If send notification successfully, message "Notification read" and code 201 will be returned.</li>
 </ul>
 
 ## /new_record

@@ -1,10 +1,10 @@
 from flask import redirect, request, jsonify, make_response
 from application import app, session, db_engine, Base
-from application.models import Account, Patient, Provider, Patient, Provider, Record, Notification, Notification_Provider, Notification_Patient, State, City
+from application.models import Account, Patient, Provider, Patient, Jurisdiction, Record, Notification, Notification_Provider, Notification_Patient, State, City
 from functools import wraps
 from sqlalchemy import func
 import datetime
-import requests, json, jwt
+import requests, json, jwt, random
 
 from sqlalchemy import Column, Integer, String, desc
 
@@ -63,6 +63,7 @@ def register():
         email = data['email']
         phone = data['phone']
         password = data['password']
+        state = data['state'].capitalize()
     except:
         return make_response("Error with form.", 401)
 
@@ -71,9 +72,11 @@ def register():
     if not user:
         # database ORM object
         try:
-            id = session.query(func.max(Patient.patient_id)).first()[0]
-            newUser = Patient(patient_id = id+1, provider_id = None)
-            newAccount = Account(id = id, email = email, phone = phone, is_patient = 1, password = password, first_name = first_name, last_name = last_name)
+            id = session.query(func.max(Account.id)).first()[0]
+            potential_provider = session.query(Jurisdiction, State).filter(State.state_name == state).filter(Jurisdiction.state_id == State.state_id).all()
+            chosen_provider = random.choice(potential_provider)[0].provider_id
+            newUser = Patient(patient_id = id+1, provider_id = chosen_provider)
+            newAccount = Account(id = id+1, email = email, phone = phone, is_patient = 1, password = password, first_name = first_name, last_name = last_name)
             session.add(newAccount)
             session.add(newUser)
             session.commit()
@@ -158,6 +161,22 @@ def read_notification(account):
             return_list.append(noti_dict)
     return jsonify(return_list)
     
+    
+@app.route("/provider", methods = ['GET'])
+@token_required
+def get_provider(account):
+    if account.is_patient == 0:
+        return make_response("Patient Only" ,401)
+    patient_id = account.id
+    provider_id = session.query(Patient).filter(Patient.patient_id == patient_id).first().provider_id
+    provider = session.query(Account).filter(Account.id == provider_id).first()
+    provider_dict = {}
+    provider_dict['patient_id'] = provider.id
+    provider_dict['email'] = provider.email
+    provider_dict['phone'] = provider.phone
+    provider_dict['first_name'] = provider.first_name
+    provider_dict['last_name'] = provider.last_name
+    return jsonify(provider_dict)    
     
 @app.route("/patients", methods = ['GET'])
 @token_required
@@ -246,6 +265,25 @@ def deny_notification(account,notification_id):
         return make_response("Error with inserting record.", 401)
     return make_response("Notification denied.", 201)
 
+@app.route("/read/<notification_id>", methods = ['GET','POST'])
+@token_required
+def readNotification(account,notification_id):
+    if account.is_patient == 0:
+        return make_response("Patient Only.", 403)
+    patient_id = account.id
+    read_notification = session.query(Notification_Patient).filter(Notification_Patient.n_id == notification_id).filter(Notification_Patient.patient_id == patient_id)
+    if len(read_notification.all()) == 0:
+        return make_response("Invalid ID.", 403)
+    notification = read_notification.first()
+    if notification.read == 1:
+        return make_response("Notification Already processed.", 201)
+    for n in read_notification:
+        n.read = 1
+    try:
+        session.commit()
+    except:
+        return make_response("Error with inserting record.", 401)
+    return make_response("Notification read.", 201)
 
 @app.route("/new_record", methods = ['GET','POST'])
 @token_required
