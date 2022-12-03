@@ -402,10 +402,10 @@ def add_notification_helper():
 
 
 @app.route("/add_notification", methods = ['GET','POST'])
-@token_required
+# @token_required
 def add_notification():
-    if account.is_patient != 0:
-        return make_response("Provider Only", 403)
+    # if account.is_patient != 0:
+    #     return make_response("Provider Only", 403)
     
     noti_list = add_notification_helper()
 

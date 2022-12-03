@@ -8,25 +8,25 @@ def get_timestamp():
 
 
 DISEASE = {
-    "Hepatitis A": {
+    1: {
         "name": "Hepatitis A",
         "state": "Lafayette",
         "cases": 20,
         "timestamp": get_timestamp(),
     },
-    "Avian Influenza (Bird flu)": {
+    2: {
         "name": "Avian Influenza",
         "state": "Chicago",
         "cases": 89,
         "timestamp": get_timestamp(),
     },
-    "Pneumococcal": {
+    3: {
         "name": "Pneumococcal",
         "state": "Miami",
         "cases": 57,
         "timestamp": get_timestamp(),
     },
-    "fake": {
+    4: {
         "name": "fake",
         "state": "Seattle",
         "cases": 220,
@@ -75,35 +75,19 @@ def read_all():
 
 
 
-# def create(disease):
-#     name = disease.get("name")
-#     state = disease.get("state")
-#     cases = disease.get("cases")
-
-#     if name not in DISEASE:
-#         DISEASE[name] = {
-#             "name": name,
-#             "state": state,
-#             "cases": cases,
-#             "timestamp": get_timestamp(),
-#         }
-#         return DISEASE[name], 201
-#     else:
-#         abort(406, f"disease with the name {name} already exists")
-
 # version2
 def create(disease):
     name = disease.get("name")
     state = disease.get("state")
     cases = disease.get("cases")
 
-    DISEASE[name] = {
+    DISEASE[len(DISEASE) + 1] = {
             "name": name,
             "state": state,
             "cases": cases,
             "timestamp": get_timestamp(),
         }
-    return DISEASE[name], 201
+    return DISEASE[len(DISEASE)], 201
 
 
 
@@ -115,11 +99,19 @@ def read_state(state):
         abort(404, f"no found")
 
 
+# get the list of specific type of disease
 def read_one(name):
-    if name in DISEASE:
-        return DISEASE[name]
-    else:
-        abort(404, f"disease with the name {name} not found")
+    ret_list = []
+    for i in DISEASE:
+
+        if DISEASE[i]['name'] == name:
+    
+            print(DISEASE[i]['name'])
+
+            ret_list.append(DISEASE[i])
+
+    return ret_list
+
 
 
 def update(name, disease):
