@@ -316,3 +316,102 @@ def add_record(account):
     except:
         return make_response("Error inserting data.", 403)
     return make_response("Successfully add record", 202)
+
+
+
+
+# create a new notification based on the fake service
+# @app.route("/add_notification", methods = ['GET','POST'])
+# def add_notification():
+
+    
+#     response_API = requests.get('http://192.168.0.143:8000/api/disease')
+#     data = response_API.text
+#     parse_json = json.loads(data)
+
+#     for i in range(len(parse_json)):
+#         cityName = parse_json[i]['state']
+#         newContent = parse_json[i]['name']
+#         timeStamp = parse_json[i]['timestamp']
+#         # query the city database to find the corresponding cityID
+#         try:
+#             city_resp = session.query(City).filter(City.city_name == cityName).first()
+#             print(city_resp)
+#         except:
+#             return make_response("No result found", 401) 
+#         # city_resp = city_resp.first()
+#         cityId = city_resp.city_id
+#         new_notification = Notification(city_id = cityId, content = newContent, datetime = timeStamp, notified = 0)
+        
+#         try:
+#             session.add(new_notification)
+#             session.commit()
+#         except:
+#             return make_response("Error inserting data.", 403) 
+#     return make_response("Successfully add new notifications", 202)
+
+# @app.route("/add_notification", methods = ['GET','POST'])
+def add_notification_helper():
+    response_API = requests.get('http://192.168.0.143:8000/api/disease')
+    data = response_API.text
+    parse_json = json.loads(data)
+    ret_list = []
+    for i in range(len(parse_json)):
+        cityName = parse_json[i]['state']
+        newContent = parse_json[i]['name']
+        timeStamp = parse_json[i]['timestamp']
+        # query the city database to find the corresponding cityID
+        try:
+            city_resp = session.query(City).filter(City.city_name == cityName).first()
+            print(city_resp)
+        except:
+            return make_response("No result found", 401) 
+        # city_resp = city_resp.first()
+        cityId = city_resp.city_id
+        new_notification = Notification(city_id = cityId, content = newContent, datetime = timeStamp, notified = 0)
+        
+        try:
+            session.add(new_notification)
+            session.commit()
+        except:
+            return make_response("Error inserting data.", 403) 
+        
+        # add notification into the return list
+        noti_dict = {}
+        noti_dict["city"] =  cityName
+        noti_dict["content"] = newContent
+        noti_dict["datetime"] = timeStamp
+        ret_list.append(noti_dict)
+
+
+        # binding notification with all providers
+        provider_group = session.query(Provider)
+        for i in provider_group:
+            print(i.provider_id)
+        for provider in provider_group:
+            np = Notification_Provider(n_id = new_notification.n_id, provider_id = provider.provider_id, processed = 0)
+
+            try:
+                session.add(np)
+                session.commit()
+            except:
+                return make_response("Error with inserting", 401)
+
+    return ret_list
+
+
+
+@app.route("/add_notification", methods = ['GET','POST'])
+@token_required
+def add_notification():
+    if account.is_patient != 0:
+        return make_response("Provider Only", 403)
+    
+    noti_list = add_notification_helper()
+
+    return jsonify(noti_list)
+
+
+
+    
+
