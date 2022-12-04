@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.ext.automap import automap_base
 import sqlalchemy
 from random import randrange
-from random import randint
+from random import choice
 from datetime import timedelta
 from datetime import datetime
 import json
@@ -24,24 +24,20 @@ Base = automap_base()
 Base.prepare(autoload_with=db_engine)
 sqlalchemy.orm.configure_mappers()
 session= Session(db_engine)
-record = Base.classes.location_record
-state = Base.classes.state
-rs = session.query(record)
+Notification = Base.classes.notification
+Service = Base.classes.service
+City = Base.classes.city
+services = session.query(Service).all()
+ns = session.query(Notification)
 d1 = datetime.strptime('1/1/2015 1:30 AM', '%m/%d/%Y %I:%M %p')
 d2 = datetime.now()
 to_add = []
 count = 0
-for r in rs:
+for n in ns:
     print(count)
-    lat = r.latitude
-    lon = r.longitude
-    response = requests.get("https://api.3geonames.org/%f,%f.json"%(lat,lon)).text
-    data = json.loads(response)
-    state_name = data['nearest']['prov']
-    print(data)
-    print(state_name)
-    state_id = session.query(state).filter(state.state_name == state_name).first().state_id
-    r.state_id = state_id
+    city_name = session.query(City).filter(City.city_id == n.city_id).first().city_name
+    title = ": ".join([city_name, choice(services).service_name])
+    n.title = title
     count += 1
 try:
     session.commit()
