@@ -331,7 +331,7 @@ def add_record(account):
 
 #     for i in range(len(parse_json)):
 #         cityName = parse_json[i]['state']
-#         newContent = parse_json[i]['name']
+#         diseaseName = parse_json[i]['name']
 #         timeStamp = parse_json[i]['timestamp']
 #         # query the city database to find the corresponding cityID
 #         try:
@@ -341,7 +341,7 @@ def add_record(account):
 #             return make_response("No result found", 401) 
 #         # city_resp = city_resp.first()
 #         cityId = city_resp.city_id
-#         new_notification = Notification(city_id = cityId, content = newContent, datetime = timeStamp, notified = 0)
+#         new_notification = Notification(city_id = cityId, content = diseaseName, datetime = timeStamp, notified = 0)
         
 #         try:
 #             session.add(new_notification)
@@ -352,14 +352,15 @@ def add_record(account):
 
 # @app.route("/add_notification", methods = ['GET','POST'])
 def add_notification_helper():
-    response_API = requests.get('http://192.168.0.143:8000/api/disease')
+    response_API = requests.get('http://10.139.208.248:8000/api/disease')
     data = response_API.text
     parse_json = json.loads(data)
     ret_list = []
     for i in range(len(parse_json)):
         cityName = parse_json[i]['city']
-        newContent = parse_json[i]['name']
+        diseaseName = parse_json[i]['name']
         timeStamp = parse_json[i]['timestamp']
+        content = parse_json[i]['content']
         # query the city database to find the corresponding cityID
         try:
             city_resp = session.query(City).filter(City.city_name == cityName).first()
@@ -368,7 +369,8 @@ def add_notification_helper():
             return make_response("No result found", 401) 
         # city_resp = city_resp.first()
         cityId = city_resp.city_id
-        new_notification = Notification(city_id = cityId, content = newContent, datetime = timeStamp, notified = 0)
+        title = cityName + ": " + diseaseName
+        new_notification = Notification(city_id = cityId, content = content, datetime = timeStamp, notified = 0, title =  title)
         
         try:
             session.add(new_notification)
@@ -379,10 +381,10 @@ def add_notification_helper():
         # add notification into the return list
         noti_dict = {}
         noti_dict["city"] =  cityName
-        noti_dict["content"] = newContent
+        noti_dict["content"] = content
+        noti_dict["title"] = title
         noti_dict["datetime"] = timeStamp
         ret_list.append(noti_dict)
-
 
         # binding notification with corresponding providers
 

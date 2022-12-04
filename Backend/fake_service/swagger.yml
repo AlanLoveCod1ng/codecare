@@ -20,6 +20,8 @@ components:
           type: string
         cases:
           type: integer
+        content:
+          type: string
   parameters:
     name:
       name: "name"
