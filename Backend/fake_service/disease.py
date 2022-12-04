@@ -10,26 +10,38 @@ def get_timestamp():
 DISEASE = {
     1: {
         "name": "Hepatitis A",
-        "state": "Lafayette",
+        "city": "Madison",
         "cases": 20,
         "timestamp": get_timestamp(),
     },
     2: {
         "name": "Avian Influenza",
-        "state": "Chicago",
+        "city": "Little Rock",
         "cases": 89,
         "timestamp": get_timestamp(),
     },
     3: {
         "name": "Pneumococcal",
-        "state": "Miami",
+        "city": "Miami",
         "cases": 57,
         "timestamp": get_timestamp(),
     },
     4: {
-        "name": "fake",
-        "state": "Seattle",
-        "cases": 220,
+        "name": "Measles",
+        "city": "Newark",
+        "cases": 85,
+        "timestamp": get_timestamp(),
+    },
+    5: {
+        "name": "Tuberculosis",
+        "city": "Newark",
+        "cases": 54,
+        "timestamp": get_timestamp(),
+    },
+    6: {
+        "name": "Tuberculosis",
+        "city": "Paterson",
+        "cases": 29,
         "timestamp": get_timestamp(),
     }
 }
@@ -38,31 +50,31 @@ DISEASE = {
 # DISEASE = [
 #     {
 #         "name": "Hepatitis A",
-#         "state": "Wisconsin",
+#         "city": "Wisconsin",
 #         "cases": 20,
 #         "timestamp": get_timestamp(),
 #     },
 #     {
 #         "name": "Avian Influenza",
-#         "state": "Wisconsin",
+#         "city": "Wisconsin",
 #         "cases": 20,
 #         "timestamp": get_timestamp(),
 #     },
 #  {
 #         "name": "Pneumococcal",
-#         "state": "Wisconsin",
+#         "city": "Wisconsin",
 #         "cases": 20,
 #         "timestamp": get_timestamp(),
 #     },
 #     {
 #         "name": "fake",
-#         "state": "hello",
+#         "city": "hello",
 #         "cases": 220,
 #         "timestamp": get_timestamp(),
 #     },
 #     {
 #         "name": "Hepatitis A",
-#         "state": "hello",
+#         "city": "hello",
 #         "cases": 20,
 #         "timestamp": get_timestamp(),
 #     }
@@ -78,12 +90,12 @@ def read_all():
 # version2
 def create(disease):
     name = disease.get("name")
-    state = disease.get("state")
+    city = disease.get("city")
     cases = disease.get("cases")
 
     DISEASE[len(DISEASE) + 1] = {
             "name": name,
-            "state": state,
+            "city": city,
             "cases": cases,
             "timestamp": get_timestamp(),
         }
@@ -91,10 +103,10 @@ def create(disease):
 
 
 
-#state
-def read_state(state):
-    if state in DISEASE:
-        return DISEASE[state]
+#city
+def read_state(city):
+    if city in DISEASE:
+        return DISEASE[city]
     else:
         abort(404, f"no found")
 
@@ -116,7 +128,7 @@ def read_one(name):
 
 def update(name, disease):
     if name in DISEASE:
-        DISEASE[name]["state"] = disease.get("state")
+        DISEASE[name]["city"] = disease.get("city")
         DISEASE[name]["cases"] = disease.get("cases")
         DISEASE[name]["timestamp"] = get_timestamp()
         return DISEASE[name]
