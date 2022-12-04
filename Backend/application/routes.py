@@ -357,7 +357,7 @@ def add_notification_helper():
     parse_json = json.loads(data)
     ret_list = []
     for i in range(len(parse_json)):
-        cityName = parse_json[i]['state']
+        cityName = parse_json[i]['city']
         newContent = parse_json[i]['name']
         timeStamp = parse_json[i]['timestamp']
         # query the city database to find the corresponding cityID
@@ -384,10 +384,15 @@ def add_notification_helper():
         ret_list.append(noti_dict)
 
 
-        # binding notification with all providers
-        provider_group = session.query(Provider)
-        for i in provider_group:
-            print(i.provider_id)
+        # binding notification with corresponding providers
+
+        state_id = session.query(City).filter(City.city_name == cityName).first().state_id
+        provider_id = session.query(Jurisdiction).filter(Jurisdiction.state_id == state_id).first().provider_id
+        provider_group = session.query(Provider).filter(Provider.provider_id == provider_id)
+
+        # for i in provider_group:
+        #     print(i.provider_id)
+
         for provider in provider_group:
             np = Notification_Provider(n_id = new_notification.n_id, provider_id = provider.provider_id, processed = 0)
 
@@ -402,10 +407,10 @@ def add_notification_helper():
 
 
 @app.route("/add_notification", methods = ['GET','POST'])
-@token_required
+# @token_required
 def add_notification():
-    if account.is_patient != 0:
-        return make_response("Provider Only", 403)
+    # if account.is_patient != 0:
+    #     return make_response("Provider Only", 403)
     
     noti_list = add_notification_helper()
 
