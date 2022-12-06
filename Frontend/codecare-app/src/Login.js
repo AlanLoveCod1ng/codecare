@@ -13,6 +13,7 @@ function  getResponse(email,password, navigate){
      })
     
 }
+
 function Login () {
     const navigate = useNavigate();
     const[email, setEmail] = useState(null);
@@ -32,6 +33,9 @@ function Login () {
     }
     return (
         <div>
+            <button onClick={()=>{
+                navigate("/register");
+            }} type="button" >Click here to register</button>
             <form>
                 <label>
                     Email:
