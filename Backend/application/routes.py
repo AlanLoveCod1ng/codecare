@@ -350,13 +350,32 @@ def add_record(account):
 #             return make_response("Error inserting data.", 403) 
 #     return make_response("Successfully add new notifications", 202)
 
+
+def complex_func1(data):
+    # change the form of data to what we want 
+    return data
+
+def complex_func2(data):
+    # change the form of data to what we want 
+    return data
+
+def complex_func3(data):
+    # change the form of data to what we want 
+    return data
+
+
+complex_list = [complex_func1,complex_func2,complex_func3]
+
 # @app.route("/add_notification", methods = ['GET','POST'])
-def add_notification_helper():
-    response_API = requests.get('http://10.139.208.248:8000/api/disease')
+def add_notification_helper(complex_index):
+    response_API = requests.get('http://10.139.208.248:8000/api/disease') #placeholder
     data = response_API.text
     parse_json = json.loads(data)
+    notification_list = []
+    for data in parse_json:
+        notification_list.append(complex_list[complex_index](data))
     ret_list = []
-    for i in range(len(parse_json)):
+    for i in range(len(notification_list)):
         cityName = parse_json[i]['city']
         diseaseName = parse_json[i]['name']
         timeStamp = parse_json[i]['timestamp']
@@ -413,8 +432,8 @@ def add_notification_helper():
 def add_notification():
     # if account.is_patient != 0:
     #     return make_response("Provider Only", 403)
-    
-    noti_list = add_notification_helper()
+
+    noti_list = add_notification_helper(0)
 
     return jsonify(noti_list)
 
