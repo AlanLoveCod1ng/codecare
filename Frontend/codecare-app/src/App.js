@@ -14,7 +14,9 @@ import Notification from './Notification';
 import {Routes,Route,useNavigate} from 'react-router-dom';
 import Details from './Details';
 import Login from './Login';
-
+import Register from './Register';
+import Patient from './Patient';
+import SpecificPatient from './SpecificPatient';
 
 function App() {
   const [newData, setData] = useState(null);
@@ -25,6 +27,10 @@ function App() {
       <Routes>
         <Route path = "/" element = {<Login/>}/>
         <Route  path="/details" element = {<Details/>} />
+        <Route path ="/register" element={<Register/>}/>
+        <Route path ="/patients" element={<Patient/>}/>
+        <Route path ="/notification" element = {<Notification/>}/>
+        <Route path ="/specificPatient" element={<SpecificPatient/>}/>
       </Routes>
     </div>
   );
