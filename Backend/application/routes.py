@@ -95,18 +95,18 @@ def read_notification(account):
     filter = request.args.get("filter", "")
     first_number = request.args.get("first", None)
     if account.is_patient == 1:
-        provider_id = account.id
+        patient_id = account.id
         notifications = session.query(
             Notification, Notification_Patient
         ).filter(
-            Notification.n_id == Notification_Provider.n_id
+            Notification.n_id == Notification_Patient.n_id
         ).filter(
-            Notification_Provider.provider_id == provider_id
+            Notification_Patient.patient_id == patient_id
         ).order_by(desc(Notification.datetime))
         if filter == "waiting":
-            notifications = notifications.filter(Notification_Provider.processed == 0)
+            notifications = notifications.filter(Notification_Patient.read == 0)
         elif filter == "processed":
-            notifications = notifications.filter(Notification_Provider.processed == 1)
+            notifications = notifications.filter(Notification_Patient.read == 1)
         if first_number and first_number.isnumeric():
             notifications = notifications[:int(first_number)]
         for n, np in notifications:
@@ -118,13 +118,13 @@ def read_notification(account):
             state_name = session.query(State).filter(State.state_id == city.state_id).first().state_name
             content = n.content
             dt = n.datetime
-            todo = np.processed
+            todo = np.read
             noti_dict["account_id"] = account.account_id
             noti_dict["city"] = city_name
             noti_dict["state"] = state_name
             noti_dict["content"] = content
             noti_dict['datetime'] = dt
-            noti_dict['processed'] = todo
+            noti_dict['read'] = todo
             return_list.append(noti_dict)
     elif account.is_patient != 1:
         provider_id = account.id
