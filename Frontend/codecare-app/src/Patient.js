@@ -10,7 +10,7 @@ export default function Patient(props) {
     const[patientData, setPatientData] = useState(null);
     const [locationData, setLocationData] = useState(null);
     useEffect(() => {
-        if(JSON.stringify(state.isPatient)===0){
+        if(JSON.stringify(state.isPatient)==='0'){
           fetch('/patients?token='+state.token)
           .then((response)=>response.json())
           .then((availableData)=>{
@@ -31,10 +31,6 @@ export default function Patient(props) {
       let provider = false;
       if(JSON.stringify(state.isPatient)==="0"){
         provider = true;
-      }
-      if (provider === false){
-        console.log("Reached here");
-        navigate('/specificPatient',{state:{ID:state.ID, token:state.token, isPatient:state.isPatient}})
       }
       
   return (
