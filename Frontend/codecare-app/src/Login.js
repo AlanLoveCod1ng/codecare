@@ -6,7 +6,7 @@ function  getResponse(email,password, navigate){
      fetch('/login?email='+email+"&password="+password)
      .then((response)=>response.json())
      .then((apiData)=>{
-        navigate('/details', {state:apiData.token})
+        navigate('/details', {state:{token:apiData.token, isPatient:apiData.is_patient, ID:apiData.id}})
      })
      .catch((error)=>{
         return null;

@@ -13,7 +13,7 @@ function Notification (props) {
     if(apiAccept!==null){
       fetch('/send/'+apiAccept+'?token='+state.token)
       .then(()=>{
-        navigate('/details',{state:state.token})
+        navigate('/details',{state:{token:state.token, isPatient:state.isPatient, ID:state.ID}})
       })
     }
   }, [apiAccept]);
@@ -21,16 +21,21 @@ function Notification (props) {
     if(apiDecline!==null){
       fetch('/send/'+apiDecline+'?token='+state.token)
       .then(()=>{
-        navigate('/details',{state:state.token})
+        navigate('/details',{state:{token:state.token, isPatient:state.isPatient, ID:state.ID}})
       })
     }
   }, [apiDecline]);
-  console.log("Notification number"+state.numberNotification);
+  
+  let provider = false;
+  if (JSON.stringify(state.isPatient) === '0'){
+    console.log("Found a provider");
+    provider = true;
+  }
   //console.log(state.entireData);
   return (
     <div>
       {
-         <NavigationButton state = {state.token}/>
+         <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID}/>
       }
       {// Lines 18-34 are middle part of the notification. 
       }
@@ -41,17 +46,20 @@ function Notification (props) {
               <h2>Placeholder Data</h2>
           </div>
           <div className='Box2'>
-              <h1>Preview of the message to be sent</h1>
+              {provider && <h1>Preview of the message to be sent</h1>}
+              {provider===false && <h1>Notification Received</h1>}
               <br></br>
               <p>{JSON.stringify(state.entireData[data].content)}</p>
-              <button onClick={()=>setApiAccept(state.entireData[data].notification_id)} type='button'>Send Notification</button>
-              <button onClick={()=>setApiDecline(state.entireData[data].notification_id)} type='button'>Reject Notification</button>
+              {provider && <div>
+                <button onClick={()=>setApiAccept(state.entireData[data].notification_id)} type='button'>Send Notification</button>
+                <button onClick={()=>setApiDecline(state.entireData[data].notification_id)} type='button'>Reject Notification</button>
+              </div>}
           </div>
-          <div className='Box3'>
+          {provider && <div className='Box3'>
               <h1>Susceptible Patients</h1>
               <br></br>
               <h2>Placeholder Data</h2>
-          </div>
+          </div>}
       </div>
       {// Lines 37-39 are the right portion of the notification tab.
       }
