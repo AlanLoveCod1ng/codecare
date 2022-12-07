@@ -1,7 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import NavigationButton from './NavigationButton';
 import { useLocation,useNavigate } from 'react-router-dom';
-import './Notification.css';
 import HandleClick from './HandleClick';
 function Notification (props) {
   const{state} = useLocation();

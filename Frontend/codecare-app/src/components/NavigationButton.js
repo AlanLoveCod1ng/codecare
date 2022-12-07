@@ -1,11 +1,10 @@
-import MapIcon from './map.JPG';
-import MessagesIcon from './messages.JPG';
-import NotificationIcon from './notifications.JPG';
-import OverviewIcon from './overview.JPG';
-import PatientsIcon from './patients.JPG';
-import SettingsIcon from './settings.JPG';
-import CodecareIcon from './Codecare.png';
-import './App.css'
+import MapIcon from '../static/map.JPG';
+import MessagesIcon from '../static/messages.JPG';
+import NotificationIcon from '../static/notifications.JPG';
+import OverviewIcon from '../static/overview.JPG';
+import PatientsIcon from '../static/patients.JPG';
+import SettingsIcon from '../static/settings.JPG';
+import CodecareIcon from '../static/Codecare.png';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 

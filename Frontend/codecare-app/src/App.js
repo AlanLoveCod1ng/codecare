@@ -1,22 +1,19 @@
-
-
-import logo from './logo.svg';
-import CodecareIcon from './Codecare.png';
-import './App.css';
-import MapIcon from './map.JPG';
-import MessagesIcon from './messages.JPG';
-import NotificationIcon from './notifications.JPG';
-import OverviewIcon from './overview.JPG';
-import PatientsIcon from './patients.JPG';
-import SettingsIcon from './settings.JPG';
+import logo from './static/logo.svg';
+import CodecareIcon from './static/Codecare.png';
+import MapIcon from './static/map.JPG';
+import MessagesIcon from './static/messages.JPG';
+import NotificationIcon from './static/notifications.JPG';
+import OverviewIcon from './static/overview.JPG';
+import PatientsIcon from './static/patients.JPG';
+import SettingsIcon from './static/settings.JPG';
 import React, {useState, useEffect, useRef} from 'react';
-import Notification from './Notification';
+import Notification from './components/Notification';
 import {Routes,Route,useNavigate} from 'react-router-dom';
-import Details from './Details';
-import Login from './Login';
-import Register from './Register';
-import Patient from './Patient';
-import SpecificPatient from './SpecificPatient';
+import Details from './components/Details';
+import Login from './components/Login';
+import Register from './components/Register';
+import Patient from './components/Patient';
+import SpecificPatient from './components/SpecificPatient';
 
 function App() {
   const [newData, setData] = useState(null);

@@ -1,4 +1,3 @@
-import './App.css';
 import React, {useState, useEffect} from 'react';
 import Notification from './Notification';
 import {useLocation,useNavigate,Redirect} from 'react-router-dom';
