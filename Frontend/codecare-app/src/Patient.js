@@ -32,6 +32,11 @@ export default function Patient(props) {
       if(JSON.stringify(state.isPatient)==="0"){
         provider = true;
       }
+
+      if (provider === false){
+        console.log("Reached here");
+        navigate('/specificPatient',{state:{ID:state.ID, token:state.token, isPatient:state.isPatient}})
+      }
       
   return (
     <div>
