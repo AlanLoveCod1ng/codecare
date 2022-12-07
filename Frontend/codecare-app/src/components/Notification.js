@@ -32,13 +32,13 @@ function Notification (props) {
   }
   //console.log(state.entireData);
   return (
-    <div>
+    <div className='row'>
       {
          <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID}/>
       }
       {// Lines 18-34 are middle part of the notification. 
       }
-      <div className='Notification'>
+      <div className='Notification col-6'>
           <div className='Box1'>
               <h1>Summary and Title of the Selected Notification {data+1} </h1>
               <br></br>
@@ -62,7 +62,7 @@ function Notification (props) {
       </div>
       {// Lines 37-39 are the right portion of the notification tab.
       }
-      <div>
+      <div className='col-3'>
         <HandleClick updateNumber = {setData} number = {state.entireData.length}/>
       </div>
     </div>

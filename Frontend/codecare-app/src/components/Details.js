@@ -95,24 +95,29 @@ function Details() {
     return (
       
       <div className="App">
-        {// following code is the left section line 62
-          <div></div>
-        }
-        
-        <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID}/>
-         
-        
-        {// following code is the middle section lines 68 - 74
-        }
-        <div>
-          {applicableData!==null && data === null && <div className="App-box2">
+        <div className='container-fluid'>
+          <div className='row'>
+            {// following code is the left section line 62
+            <div></div>
+            }
             
-            <HandleClick updateNumber = {setData} number = {applicableData.length}/>
+            <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID}/>
+            
+            
+            {// following code is the middle section lines 68 - 74
+            }
+            <div>
+              {applicableData!==null && data === null && <div className="App-box2">
+                
+                <HandleClick updateNumber = {setData} number = {applicableData.length}/>
+            </div>
+              }
+            </div>
+            {// following code is the right section lines 76 - 82 
+            }
           </div>
-          }
         </div>
-        {// following code is the right section lines 76 - 82 
-        }
+        
       </div>
     );
   }

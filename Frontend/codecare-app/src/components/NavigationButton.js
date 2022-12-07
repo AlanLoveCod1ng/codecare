@@ -1,11 +1,7 @@
-import MapIcon from '../static/map.JPG';
-import MessagesIcon from '../static/messages.JPG';
-import NotificationIcon from '../static/notifications.JPG';
-import OverviewIcon from '../static/overview.JPG';
-import PatientsIcon from '../static/patients.JPG';
-import SettingsIcon from '../static/settings.JPG';
 import CodecareIcon from '../static/Codecare.png';
 import React from 'react'
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import { faHouse, faMap, faEnvelope, faGear, faMessage, faUser} from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom';
 
 export default function NavigationButton(props) {
@@ -18,36 +14,52 @@ export default function NavigationButton(props) {
         url = '/specificPatient'
     }
   return (
-    <div className="App-box1">
+    <div className="App-box1 col-3">
         <img src={CodecareIcon} width="200" height="80"/>
-        <div className = "navButs">
-        <button>
-            <img src = {OverviewIcon} alt = "overview"/>
-            Overview
-        </button>
-        <button onClick={()=>{navigate('/details',{state:{token:props.token, isPatient:props.isPatient, ID:props.ID}})}}>
-            <img src = {NotificationIcon} alt = "notifications"/>
-            Notifications
-        </button>
-        <button>
-            <img src = {MessagesIcon} alt = "messages"/>
-            Messages
-        </button>
-        <button>
-            <img src = {MapIcon} alt = "map"/>
-            Map
-        </button>
-        <button onClick={()=>{navigate(url,{state:{token:props.token, isPatient:props.isPatient, ID:props.ID}})}}>
-            <img src = {PatientsIcon} alt = "patients"/>
-            Patients
-        </button>
-        <button>
-            <img src = {SettingsIcon} alt = "settings"/>
-            Settings
-        </button>
-        </div>
+        <div className = "flex-column bg-light align-middle d-flex justify-content-center h-75">
+            <div className='row justify-content-center'>
+                <a className="col-sm-6 btn btn-outline-success me-2">
+                    <FontAwesomeIcon icon={faHouse} />
+                    <span> Overview</span>
+                </a>
+            </div>
+            <div className='row justify-content-center'>
+                <a className= "col-sm-6 btn btn-outline-success me-2" onClick={()=>{navigate('/details',{state:{token:props.token, isPatient:props.isPatient, ID:props.ID}})}}>
+                    <FontAwesomeIcon icon={faEnvelope} />  
+                    <span> Notifications</span>
+                </a>
+            </div>
             
-          
+            <div className='row justify-content-center'>
+                <a className= "col-sm-6 btn btn-outline-success me-2">
+                    <FontAwesomeIcon icon={faMessage} />  
+                    <span> Messages</span>
+                </a>
+            </div>
+            
+            <div className='row justify-content-center'>
+                <a className= "col-sm-6 btn btn-outline-success me-2">
+                    <FontAwesomeIcon icon={faMap} />
+                    <span> Map</span>
+                </a>
+            </div>
+            
+            <div className='row justify-content-center'>
+                <a className= "col-sm-6 btn btn-outline-success me-2" onClick={()=>{navigate(url,{state:{token:props.token, isPatient:props.isPatient, ID:props.ID}})}}>
+                    <FontAwesomeIcon icon={faUser} />
+                    <span> Patients</span>
+                </a>
+            </div>
+            
+            <div className='row justify-content-center'>
+                <a className= "col-sm-6 btn btn-outline-success me-2">
+                    <FontAwesomeIcon icon={faGear} />
+                    <span> Settings</span>
+                </a>
+            </div>
+            
+        </div>
+        
     </div>
   )
 }
