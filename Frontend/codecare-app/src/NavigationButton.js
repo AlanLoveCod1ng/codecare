@@ -12,7 +12,8 @@ import { useNavigate } from 'react-router-dom';
 export default function NavigationButton(props) {
     const navigate=useNavigate();
     let url = null;
-    if (JSON.stringify(props.isPatient)===0){
+    console.log(props.isPatient);
+    if (JSON.stringify(props.isPatient)==='0'){
         url = '/patients'
     } else {
         url = '/specificPatient'
