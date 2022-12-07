@@ -11,6 +11,12 @@ import { useNavigate } from 'react-router-dom';
 
 export default function NavigationButton(props) {
     const navigate=useNavigate();
+    let url = null;
+    if (JSON.stringify(props.isPatient)===0){
+        url = '/patients'
+    } else {
+        url = '/specificPatient'
+    }
   return (
     <div className="App-box1">
         <img src={CodecareIcon} width="200" height="80"/>
@@ -19,7 +25,7 @@ export default function NavigationButton(props) {
             <img src = {OverviewIcon} alt = "overview"/>
             Overview
         </button>
-        <button onClick={()=>{navigate('/details',{state:props.state})}}>
+        <button onClick={()=>{navigate('/details',{state:{token:props.token, isPatient:props.isPatient, ID:props.ID}})}}>
             <img src = {NotificationIcon} alt = "notifications"/>
             Notifications
         </button>
@@ -31,7 +37,7 @@ export default function NavigationButton(props) {
             <img src = {MapIcon} alt = "map"/>
             Map
         </button>
-        <button onClick={()=>{navigate('/patients',{state:props.state})}}>
+        <button onClick={()=>{navigate(url,{state:{token:props.token, isPatient:props.isPatient, ID:props.ID}})}}>
             <img src = {PatientsIcon} alt = "patients"/>
             Patients
         </button>
