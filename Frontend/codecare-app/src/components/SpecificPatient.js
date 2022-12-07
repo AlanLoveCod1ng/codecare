@@ -1,8 +1,9 @@
 import React,{useState,useEffect} from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import NavigationButton from './NavigationButton';
 
 export default function SpecificPatient(props) {
+    const navigate = useNavigate();
     const {state} = useLocation();
     const [patientData, setPatientData] = useState(null);
     let provider = false;
@@ -12,7 +13,11 @@ export default function SpecificPatient(props) {
     useEffect(() => {
         if(provider){
             fetch('/record/'+state.patient_id+"?token="+state.token)
-            .then((response)=>response.json())
+            .then((response)=>{
+                if(response.status===403){
+                    navigate('/');
+                }
+                return response.json()})
             .then((availableData)=>{
               setPatientData(availableData);
             })

@@ -12,7 +12,11 @@ export default function Patient(props) {
     useEffect(() => {
         if(JSON.stringify(state.isPatient)==='0'){
           fetch('/patients?token='+state.token)
-          .then((response)=>response.json())
+          .then((response)=>{
+            if(response.status === 403){
+              navigate('/');
+            }
+            return response.json()})
           .then((availableData)=>{
           setPatientData(availableData);
           })

@@ -18,7 +18,12 @@ function Details() {
 
     useEffect(() => {
         fetch('/notification?filter='+filter+"&first="+first+"&token="+state.token)
-     .then((response)=>response.json())
+     .then((response)=>{
+        if(response.status===403){
+          navigate('/');
+        }
+        return response.json()
+      })
      .then((apiData)=>{
       setApplicableData(apiData);
      })
@@ -75,7 +80,10 @@ function Details() {
     useEffect (()=>{
       if (latitude!==null && longitude!==null){
           fetch('/new_record?lat='+latitude+'&lon='+longitude+'&datetime='+newDate+'+'+timePrint+"?token="+state.token)
-          .then(()=>{
+          .then((response)=>{
+            if(response.status===403){
+              navigate('/');
+            }
           })
         }
     },[latitude,longitude])
