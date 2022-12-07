@@ -12,6 +12,10 @@ function Notification (props) {
     if(apiAccept!==null){
       fetch('/send/'+apiAccept+'?token='+state.token)
       .then((response)=>{
+        if(response.status===201){
+          alert("Notification Sent Successfully");
+        }
+        
         if(response.status===403){
           navigate('/');
         }
@@ -23,6 +27,9 @@ function Notification (props) {
     if(apiDecline!==null){
       fetch('/send/'+apiDecline+'?token='+state.token)
       .then((response)=>{
+        if(response.status===201){
+          alert("Notification Denied Successfully");
+        }
         if(response.status===403){
           navigate('/');
         }
