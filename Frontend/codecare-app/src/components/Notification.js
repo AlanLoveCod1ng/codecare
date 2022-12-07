@@ -11,7 +11,10 @@ function Notification (props) {
   useEffect(() => {
     if(apiAccept!==null){
       fetch('/send/'+apiAccept+'?token='+state.token)
-      .then(()=>{
+      .then((response)=>{
+        if(response.status===403){
+          navigate('/');
+        }
         navigate('/details',{state:{token:state.token, isPatient:state.isPatient, ID:state.ID}})
       })
     }
@@ -19,7 +22,10 @@ function Notification (props) {
   useEffect(() => {
     if(apiDecline!==null){
       fetch('/send/'+apiDecline+'?token='+state.token)
-      .then(()=>{
+      .then((response)=>{
+        if(response.status===403){
+          navigate('/');
+        }
         navigate('/details',{state:{token:state.token, isPatient:state.isPatient, ID:state.ID}})
       })
     }
