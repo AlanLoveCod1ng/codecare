@@ -45,7 +45,7 @@ function Notification (props) {
   }
   //console.log(state.entireData);
   return (
-    <div className='row'>
+    <div className='row justify-content-center'>
       {
          <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID}/>
       }

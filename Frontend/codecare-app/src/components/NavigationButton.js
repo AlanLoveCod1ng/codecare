@@ -15,8 +15,16 @@ export default function NavigationButton(props) {
     }
   return (
     <div className="App-box1 col-3">
-        <img src={CodecareIcon} width="200" height="80"/>
-        <div className = "flex-column bg-light align-middle d-flex justify-content-center h-75">
+        <div className='container'>
+            <div className="row justify-content-center">
+                <div className='col text-center'>
+                    <img src={CodecareIcon} width="200" height="80"/>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div className = "flex-column align-middle d-flex justify-content-center h-75 gap-4">
             <div className='row justify-content-center'>
                 <a className="col-sm-6 btn btn-outline-success me-2">
                     <FontAwesomeIcon icon={faHouse} />
