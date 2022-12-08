@@ -14,7 +14,7 @@ export default function NavigationButton(props) {
         url = '/specificPatient'
     }
   return (
-    <div className="App-box1 col-3">
+    <div className="App-box1 col-2">
         <div className='container'>
             <div className="row justify-content-center">
                 <div className='col text-center'>
@@ -27,45 +27,44 @@ export default function NavigationButton(props) {
         <div className = "flex-column align-middle d-flex justify-content-center h-75 gap-4">
             <div className='row justify-content-center'>
 
-                <button className="col-sm-6 btn border-0 btn-outline-success btn-lg me-2 text-start">
+                <button className="col-sm-7 btn border-0 btn-outline-success btn-lg me-2 text-start" disabled>
                     <FontAwesomeIcon icon={faHouse} />
-                    <span>   </span>
-                    <span>Overview</span>
+                    <span> Overview</span>
                 </button>
             </div>
             <div className='row justify-content-center'>
-                <a className= "col-sm-6 btn btn-outline-success me-2 border-0 btn-lg text-start" onClick={()=>{navigate('/details',{state:{token:props.token, isPatient:props.isPatient, ID:props.ID}})}}>
+                <button className= "col-sm-7 btn btn-outline-success me-2 border-0 btn-lg text-start" onClick={()=>{navigate('/details',{state:{token:props.token, isPatient:props.isPatient, ID:props.ID}})}}>
                     <FontAwesomeIcon icon={faEnvelope} />  
                     <span> Notifications</span>
-                </a>
+                </button>
             </div>
             
             <div className='row justify-content-center'>
-                <a className= "col-sm-6 btn btn-outline-success me-2 border-0 btn-lg text-start">
+                <button className= "col-sm-7 btn btn-outline-success me-2 border-0 btn-lg text-start" disabled>
                     <FontAwesomeIcon icon={faMessage} />  
                     <span> Messages</span>
-                </a>
+                </button>
             </div>
             
             <div className='row justify-content-center'>
-                <a className= "col-sm-6 border-0 btn-lg btn btn-outline-success me-2 text-start">
+                <button className= "col-sm-7 border-0 btn-lg btn btn-outline-success me-2 text-start" disabled>
                     <FontAwesomeIcon icon={faMap} />
                     <span> Map</span>
-                </a>
+                </button>
             </div>
             
             <div className='row justify-content-center'>
-                <a className= "col-sm-6 border-0 btn-lg btn btn-outline-success me-2 text-start" onClick={()=>{navigate(url,{state:{token:props.token, isPatient:props.isPatient, ID:props.ID}})}}>
+                <button className= "col-sm-7 border-0 btn-lg btn btn-outline-success me-2 text-start" onClick={()=>{navigate(url,{state:{token:props.token, isPatient:props.isPatient, ID:props.ID}})}}>
                     <FontAwesomeIcon icon={faUser} />
                     <span> Patients</span>
-                </a>
+                </button>
             </div>
             
             <div className='row justify-content-center'>
-                <a className= "col-sm-6 border-0 btn-lg btn btn-outline-success me-2 text-start">
+                <button className= "col-sm-7 border-0 btn-lg btn btn-outline-success me-2 text-start" disabled>
                     <FontAwesomeIcon icon={faGear} />
                     <span> Settings</span>
-                </a>
+                </button>
             </div>
             
         </div>
