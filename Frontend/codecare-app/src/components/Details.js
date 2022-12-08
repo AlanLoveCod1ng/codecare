@@ -3,6 +3,7 @@ import Notification from './Notification';
 import {useLocation,useNavigate,Redirect} from 'react-router-dom';
 import HandleClick from './HandleClick';
 import NavigationButton from './NavigationButton';
+import Collapse from 'react-bootstrap/Collapse';
 
 function Details() {
     const {state} = useLocation();
@@ -99,33 +100,28 @@ function Details() {
         navigate('/notification',{state:{numberNotification:data,entireData:applicableData, token:state.token, isPatient:state.isPatient, ID:state.ID}})
     }
 
-    
     return (
       
       <div className="App">
-        <div className='container-fluid'>
           <div className='row'>
-            {// following code is the left section line 62
-            <div></div>
-            }
-            
-            <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID}/>
-            
-            
-            {// following code is the middle section lines 68 - 74
-            }
-            <div>
-              {applicableData!==null && data === null && <div className="App-box2">
-                
-                <HandleClick updateNumber = {setData} number = {applicableData.length}/>
+            <div className='col-2 bg-light vh-100'>           
+              <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID}/>
+            </div> 
+
+            <div className='col-8'>
+              <div className='row'>
+                <h1> Current Notifications </h1>
+                <div>
+                  {
+                    applicableData!==null && data === null && <div className="App-box2">
+                    
+                      <HandleClick updateNumber = {setData} number = {applicableData.length}/>
+                    </div>
+                  }
+                </div>
+              </div>
             </div>
-              }
-            </div>
-            {// following code is the right section lines 76 - 82 
-            }
-          </div>
         </div>
-        
       </div>
     );
   }

@@ -1,23 +1,27 @@
 import React from 'react'
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
 
 function HandleClick (props) {
+    const newArr = [];
+
     const clickedOn = (numberVar) =>{
         props.updateNumber(numberVar);
     };
-    const newArr = [];
+    
     for (let i =0; i<props.number;i++){
         newArr.push(i);
     }
+
     return (
         <div>
-            <h1> Current Notifications </h1>
-            <ul>
-                {
-                    newArr.map((individualData)=>(
-                        <li onClick = {()=>clickedOn(individualData)}>Summary of Notification {individualData+1}</li>
-                    ))
-                }
-            </ul>
+                <Row xs={1} md={1} className = "gap-1">
+                    {
+                        newArr.map((individualData)=>(
+                                <Button onClick = {()=>clickedOn(individualData)}>Notification {individualData+1}</Button>
+                        ))
+                    }
+                </Row>
         </div>
     );
 };

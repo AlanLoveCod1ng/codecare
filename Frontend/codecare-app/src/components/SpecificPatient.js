@@ -37,17 +37,19 @@ export default function SpecificPatient(props) {
         }
       }
   return (
-    <div>
-        
+    <div className='row'>
+        <div className='col-2 bg-light vh-100'>
         <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID} />
-        
+        </div>
         {
             // Lines 31 till 34 are the top div only contaning the name of the patient.
         }
+        <div className='col-8'>
         {provider && state.ispatientData!== null &&<div>
             <h1>{state.patient_firstName} {state.patient_lastName}</h1>
 
         </div>}
+        
         {
             // Lines 38 till 46 are the bottom div containing the city name and the state name of the visited cities.
         }
@@ -59,6 +61,7 @@ export default function SpecificPatient(props) {
                             ))
                 }
             </ul>
+        </div>
         </div>
     </div>
   )
