@@ -8,7 +8,6 @@ export default function NavigationButton(props) {
     const navigate=useNavigate();
     const {state} = useLocation();
     let url = null;
-    console.log(props.isPatient);
     if (JSON.stringify(props.isPatient)==='0'){
         url = '/patients'
     } else {
