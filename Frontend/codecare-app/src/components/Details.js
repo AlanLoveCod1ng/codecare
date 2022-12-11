@@ -80,7 +80,7 @@ function Details() {
    
     useEffect (()=>{
       if (latitude!==null && longitude!==null){
-          fetch('/new_record?lat='+latitude+'&lon='+longitude+'&datetime='+newDate+'+'+timePrint+"?token="+state.token)
+          fetch('/new_record?lat='+latitude+'&lon='+longitude+'&datetime='+newDate+'+'+timePrint+"&token="+state.token)
           .then((response)=>{
             if(response.status===403){
               navigate('/');
