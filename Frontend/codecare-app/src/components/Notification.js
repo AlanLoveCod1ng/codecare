@@ -47,7 +47,6 @@ function Notification (props) {
     console.log("Found a provider");
     provider = true;
   }
-  //console.log(state.entireData);
   return (
     <div className='row'>
       <div className='col-2 bg-light vh-100'>
@@ -67,7 +66,7 @@ function Notification (props) {
                 <Accordion.Item eventKey="0">
                   <Accordion.Header>
                     <h1>
-                      Title of Notification {data+1} 
+                      {JSON.stringify(state.entireData[data].title).replace(/['"]+/g, '')}
                     </h1>
                   </Accordion.Header>
                   <br></br>
@@ -82,12 +81,12 @@ function Notification (props) {
                 <Accordion.Item eventKey="1">
                   <Accordion.Header>
                     {provider && <h1>Preview of the message to be sent</h1>}
+                    {provider===false && <h1>Notification Received</h1>}
                   </Accordion.Header>
                   <AccordionBody>
-                    {provider===false && <h1>Notification Received</h1>}
                     
                     <br></br>
-                    <p>{JSON.stringify(state.entireData[data].content)}</p>
+                    <p>{JSON.stringify(state.entireData[data].content).replace(/['"]+/g, '')}</p>
                     
                     {provider && <div>
                       <button onClick={()=>setApiAccept(state.entireData[data].notification_id)} type='button'>Send Notification</button>
@@ -112,7 +111,7 @@ function Notification (props) {
         </div>
 
         <div className='col-2'>
-          <HandleClick updateNumber = {setData} number = {state.entireData.length}/>
+          <HandleClick updateNumber = {setData} number = {state.entireData.length} data = {data}/>
         </div>
       </div> 
       </div>

@@ -46,7 +46,7 @@ export default function Patient(props) {
         console.log("Reached here");
         navigate('/specificPatient',{state:{ID:state.ID, token:state.token, isPatient:state.isPatient}})
       }
-      
+      console.log(patientData)
   return (
     <div className='row gap-2'>
       <div className='col-2 bg-light vh-100'>

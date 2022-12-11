@@ -119,12 +119,14 @@ def read_notification(account):
             content = n.content
             dt = n.datetime
             todo = np.read
+            title = n.title
             noti_dict["account_id"] = account.account_id
             noti_dict["city"] = city_name
             noti_dict["state"] = state_name
             noti_dict["content"] = content
             noti_dict['datetime'] = dt
             noti_dict['read'] = todo
+            noti_dict['title'] = title
             return_list.append(noti_dict)
     elif account.is_patient != 1:
         provider_id = account.id
@@ -151,6 +153,7 @@ def read_notification(account):
             content = n.content
             dt = n.datetime
             todo = np.processed
+            title = n.title
             noti_dict['notification_id'] = n.n_id
             noti_dict["account_id"] = account.account_id
             noti_dict["city"] = city_name
@@ -158,6 +161,7 @@ def read_notification(account):
             noti_dict["content"] = content
             noti_dict['datetime'] = dt
             noti_dict['processed'] = todo
+            noti_dict['title'] = title
             return_list.append(noti_dict)
     return jsonify(return_list)
     
