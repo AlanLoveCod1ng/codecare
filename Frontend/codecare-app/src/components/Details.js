@@ -105,7 +105,7 @@ function Details() {
       <div className="App">
           <div className='row'>
             <div className='col-2 bg-light vh-100'>           
-              <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID}/>
+              <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID} firstName = {state.first_name} lastName = {state.last_name}/>
             </div> 
 
             <div className='col-8'>
@@ -115,7 +115,7 @@ function Details() {
                   {
                     applicableData!==null && data === null && <div className="App-box2">
                     
-                      <HandleClick updateNumber = {setData} number = {applicableData.length}/>
+                      <HandleClick updateNumber = {setData} number = {applicableData.length} notifications = {applicableData}/>
                     </div>
                   }
                 </div>

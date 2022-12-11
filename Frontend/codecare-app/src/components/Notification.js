@@ -52,7 +52,7 @@ function Notification (props) {
     <div className='row'>
       <div className='col-2 bg-light vh-100'>
       {
-         <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID}/>
+         <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID} firstName = {state.first_name} lastName = {state.last_name}/>
       }
       </div>
       <div className='col-10'>
@@ -110,7 +110,7 @@ function Notification (props) {
             </div>
           </Accordion>
         </div>
-  
+
         <div className='col-2'>
           <HandleClick updateNumber = {setData} number = {state.entireData.length}/>
         </div>

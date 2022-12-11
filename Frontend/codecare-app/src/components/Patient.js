@@ -53,7 +53,7 @@ export default function Patient(props) {
         {//Line 22 is the left side nav bar.
         <></>}
         
-         <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID}/>
+         <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID} firstName = {state.first_name} lastName = {state.last_name}/>
          </div>
 
          <div className='col-8 bg-light'>

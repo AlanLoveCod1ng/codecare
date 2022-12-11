@@ -3,8 +3,10 @@ import React from 'react'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import { faHouse, faMap, faEnvelope, faGear, faMessage, faUser} from '@fortawesome/free-solid-svg-icons'
 import { useLocation, useNavigate } from 'react-router-dom';
+import {useState,useEffect} from 'react';
 
 export default function NavigationButton(props) {
+    const[userData, setUserData] = useState(0);
     const navigate=useNavigate();
     const {state} = useLocation();
     let url = null;
@@ -13,6 +15,19 @@ export default function NavigationButton(props) {
     } else {
         url = '/specificPatient'
     }
+
+    useEffect(() => {
+        fetch('/account?token='+state.token)
+        .then((response)=>{
+            if(response.status === 403){
+                navigate('/');
+            }
+            return response.json()})
+            .then((availableData)=>{
+                setUserData(availableData);
+        })
+        }, [props, state]);
+
   return (
     <div className="App-box1 vh-100 fixed-left">
         <div className='container'>
@@ -24,6 +39,9 @@ export default function NavigationButton(props) {
         </div>
         
         <div className = "flex-column align-middle d-flex justify-content-center h-75 bg-light gap-4">
+
+        <div className = "text-center">Welcome, {userData.first_name} {userData.last_name}!</div>
+
             <div className='row justify-content-center'>
 
                 <button className="col-sm-7 btn border-0 btn-outline-success btn-md me-2 text-start" disabled>

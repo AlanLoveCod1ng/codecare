@@ -1,6 +1,7 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 function HandleClick (props) {
     const newArr = [];
@@ -15,13 +16,13 @@ function HandleClick (props) {
 
     return (
         <div>
-                <Row xs={1} md={1} className = "gap-1">
+                <ListGroup>
                     {
-                        newArr.map((individualData)=>(
-                                <Button onClick = {()=>clickedOn(individualData)}>Notification {individualData+1}</Button>
+                        newArr.map((individualData) => (
+                            <ListGroup.Item action onClick={()=>clickedOn(individualData)}>Notification {individualData + 1}</ListGroup.Item>
                         ))
                     }
-                </Row>
+                </ListGroup>
         </div>
     );
 };

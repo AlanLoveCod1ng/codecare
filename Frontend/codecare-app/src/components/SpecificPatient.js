@@ -54,7 +54,7 @@ export default function SpecificPatient(props) {
   return (
     <div className='row'>
         <div className='col-2 bg-light vh-100'>
-        <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID} />
+        <NavigationButton token = {state.token} isPatient = {state.isPatient} ID = {state.ID} firstName = {state.first_name} lastName = {state.last_name}/>
         </div>
         {
             // Lines 31 till 34 are the top div only contaning the name of the patient.
