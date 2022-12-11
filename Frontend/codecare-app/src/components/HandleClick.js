@@ -19,7 +19,7 @@ function HandleClick (props) {
                 <ListGroup variant='pills' defaultActiveKey={"item"+props.data}>
                     {
                         newArr.map((individualData) => (
-                            <ListGroup.Item eventKey={"item"+individualData} action onClick={()=>clickedOn(individualData)}>Notification {individualData + 1}</ListGroup.Item>
+                            <ListGroup.Item eventKey={"item"+individualData} action onClick={()=>clickedOn(individualData)}>{props.notifs[individualData].title}</ListGroup.Item>
                         ))
                     }
                 </ListGroup>

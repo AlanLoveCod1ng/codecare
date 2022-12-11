@@ -66,7 +66,7 @@ function Notification (props) {
                 <Accordion.Item eventKey="0">
                   <Accordion.Header>
                     <h1>
-                      {JSON.stringify(state.entireData[data].title).replace(/['"]+/g, '')}
+                      {JSON.parse(JSON.stringify(state.entireData[data].title))}
                     </h1>
                   </Accordion.Header>
                   <br></br>
@@ -86,7 +86,7 @@ function Notification (props) {
                   <AccordionBody>
                     
                     <br></br>
-                    <p>{JSON.stringify(state.entireData[data].content).replace(/['"]+/g, '')}</p>
+                    <p>{JSON.parse(JSON.stringify(state.entireData[data].content))}</p>
                     
                     {provider && <div>
                       <button onClick={()=>setApiAccept(state.entireData[data].notification_id)} type='button'>Send Notification</button>
@@ -111,7 +111,7 @@ function Notification (props) {
         </div>
 
         <div className='col-2'>
-          <HandleClick updateNumber = {setData} number = {state.entireData.length} data = {data}/>
+          <HandleClick updateNumber = {setData} number = {state.entireData.length} data = {data} notifs = {state.entireData}/>
         </div>
       </div> 
       </div>

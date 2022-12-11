@@ -115,7 +115,7 @@ function Details() {
                   {
                     applicableData!==null && data === null && <div className="App-box2">
                     
-                      <HandleClick updateNumber = {setData} number = {applicableData.length} notifications = {applicableData}/>
+                      <HandleClick updateNumber = {setData} number = {applicableData.length} notifications = {applicableData} notifs = {applicableData}/>
                     </div>
                   }
                 </div>

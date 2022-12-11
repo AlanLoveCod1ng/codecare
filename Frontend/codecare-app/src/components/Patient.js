@@ -64,8 +64,12 @@ export default function Patient(props) {
                   <Row xs={1} md={3} className="gap-2">
                         {patientDetails.map((patient)=>(
                             <Card onClick = {()=>handleClick(patient)}>
-                              <Card.Img variant="top" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fchas.uni.edu%2Ftheatre%2Fdirectory%2Fsusan-b-connor&psig=AOvVaw33rVmqZdtVJQ4f8QuSa91k&ust=1670592909227000&source=images&cd=vfe&ved=0CAwQjRxqFwoTCICk-9yR6vsCFQAAAAAdAAAAABAD" />
-                              Summary of Patient {patient.first_name}
+                              <Card.Img variant="top" src="https://www.pngitem.com/pimgs/m/30-307416_profile-icon-png-image-free-download-searchpng-employee.png" />
+                              <Card.Title>Summary of {patient.first_name} {patient.last_name}</Card.Title>
+                              <Card.Text>
+                                Email: {patient.email} <br></br>
+                                Phone Number: {patient.phone}
+                              </Card.Text>
                             </Card>
                         ))
                         }
