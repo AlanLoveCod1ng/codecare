@@ -90,7 +90,7 @@ export default function SpecificPatient(props) {
                                             <li className="list-group-item">State: {location.state_id}</li>
                                             <li className="list-group-item">Time: {location.datetime}</li>
                                             <li className="list-group-item">Latitude: {location.latitude}</li>
-                                            <li className="list-group-item">Latitude: {location.longitude}</li>
+                                            <li className="list-group-item">Longitude: {location.longitude}</li>
                                         </ul>
                                         <div className='card-body'>
                                             <button onClick={()=>onClickHandle(location)} className="btn btn-primary">Show on Map</button>
