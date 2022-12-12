@@ -52,6 +52,8 @@ export default function Register() {
     }
   return (
     <div>
+        <img src = "https://cdn.discordapp.com/attachments/813518324775387137/1051929596750204958/image.png" style = {{width: "100%"}}/>
+        <div className = "position-absolute end-50 top-50">
             <Button variant="primary" onClick={handleShow}>
                 Register
             </Button>
@@ -113,6 +115,7 @@ export default function Register() {
                     </Button>
                 </Modal.Footer>
             </Modal>
+        </div>
     </div>
   )
 }

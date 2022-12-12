@@ -4,6 +4,9 @@ import { useLocation,useNavigate } from 'react-router-dom';
 import HandleClick from './HandleClick';
 import Accordion from 'react-bootstrap/Accordion';
 import AccordionBody from 'react-bootstrap/esm/AccordionBody';
+import Button from 'react-bootstrap/Button';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {faArrowLeftLong} from '@fortawesome/free-solid-svg-icons'
 
 function Notification (props) {
   const{state} = useLocation();
@@ -56,7 +59,14 @@ function Notification (props) {
       </div>
       <div className='col-10'>
         <div className='row gap-4'>
-          <h1>Current Notifications</h1>
+          <div className='col-9'>
+            <h1>Current Notifications</h1>
+          </div>
+          <div className='col-1'>
+            <Button variant = "light" onClick={()=>{navigate('/details',{state:{token:state.token, isPatient:state.isPatient, ID:state.ID}})}}>
+              <FontAwesomeIcon icon={faArrowLeftLong} />
+            </Button>
+          </div> 
         </div>
         <div className = 'row'>
         <div className='col-10'>
@@ -88,9 +98,9 @@ function Notification (props) {
                     <br></br>
                     <p>{JSON.parse(JSON.stringify(state.entireData[data].content))}</p>
                     
-                    {provider && <div>
-                      <button onClick={()=>setApiAccept(state.entireData[data].notification_id)} type='button'>Send Notification</button>
-                      <button onClick={()=>setApiDecline(state.entireData[data].notification_id)} type='button'>Reject Notification</button>
+                    {provider && <div className = "btn-toolbar gap-2">
+                      <Button onClick={()=>setApiAccept(state.entireData[data].notification_id)} variant = 'success'>Send Notification</Button>
+                      <Button onClick={()=>setApiDecline(state.entireData[data].notification_id)} variant = 'secondary'>Reject Notification</Button>
                     </div>}
                   </AccordionBody>
                 </Accordion.Item>

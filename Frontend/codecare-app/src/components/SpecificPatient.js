@@ -1,9 +1,9 @@
 import React,{useState,useEffect} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NavigationButton from './NavigationButton';
-
-
-
+import Button from 'react-bootstrap/Button';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {faArrowLeftLong} from '@fortawesome/free-solid-svg-icons'
 
 export default function SpecificPatient(props) {
     const navigate = useNavigate();
@@ -60,9 +60,17 @@ export default function SpecificPatient(props) {
             // Lines 31 till 34 are the top div only contaning the name of the patient.
         }
         <div className='col-6'>
-            {provider && state.ispatientData!== null &&<div>
-                <h1>{state.patient_firstName} {state.patient_lastName}</h1>
-
+            {provider && state.ispatientData!== null &&<div className='row'>
+                <div className = 'col-11'>
+                    <h1>
+                        {state.patient_firstName} {state.patient_lastName}
+                    </h1>
+                </div>
+                <div className='col-1'>
+                    <Button variant = "light" onClick={()=>{navigate('/patients',{state:{token:state.token, isPatient:state.isPatient, ID:state.ID}})}}>
+                        <FontAwesomeIcon icon={faArrowLeftLong} />
+                    </Button>
+                </div> 
             </div>}
             
             {

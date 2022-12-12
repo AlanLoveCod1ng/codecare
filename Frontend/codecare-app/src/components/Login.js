@@ -40,42 +40,45 @@ function Login () {
 
     return (
         <div>
-            <Button variant="primary" onClick={handleShow}>
-                Login
-            </Button>
+            <img src = "https://img.freepik.com/premium-vector/doctor-woman-working-laptop-office-hospital-medicine-concept-flat-vector_622933-24.jpg?w=2000" style = {{width: "100%"}}/>
+            <div className = "position-absolute end-50 top-50">
+                <Button variant="primary" onClick={handleShow}>
+                    Login
+                </Button>
 
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        Nice to see you again
-                        
-                        <h1>
-                            Welcome Back
-                        </h1>
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <FloatingLabel
-                        controlId="floatingInput"
-                        label="Enter your username"
-                        className="mb-3">
-                            <Form.Control onChange={changeEmail} type="email" placeholder="name@example.com" />
-                    </FloatingLabel>
-                    <FloatingLabel 
-                        controlId="floatingPassword" 
-                        label="Enter your password">
-                            <Form.Control onChange={changePassword} type="password" placeholder="Password" />
-                    </FloatingLabel>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={()=>{navigate("/register")}}>
-                        Register
-                    </Button>
-                    <Button variant="primary" onClick={sendAPI}>
-                        Submit
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            Nice to see you again
+                            
+                            <h1>
+                                Welcome Back
+                            </h1>
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <FloatingLabel
+                            controlId="floatingInput"
+                            label="Enter your username"
+                            className="mb-3">
+                                <Form.Control onChange={changeEmail} type="email" placeholder="name@example.com" />
+                        </FloatingLabel>
+                        <FloatingLabel 
+                            controlId="floatingPassword" 
+                            label="Enter your password">
+                                <Form.Control onChange={changePassword} type="password" placeholder="Password" />
+                        </FloatingLabel>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={()=>{navigate("/register")}}>
+                            Register
+                        </Button>
+                        <Button variant="primary" onClick={sendAPI}>
+                            Submit
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
       </div>
     );
 };
